@@ -3,6 +3,8 @@ const app = express();
 
 import cors from "cors";
 
+app.use(express.json());
+
 app.use(cors({
   origin: "http://localhost:5173"
 }));
@@ -31,7 +33,7 @@ const words = [
     "spice"
 ];
 
-const pastGuesses: string[] = [];
+const guesses: string[] = [];
 
 app.get("/api/givemeWOOORD", (req, res) => {
     const randomWord = words[Math.floor(Math.random() * words.length)];
@@ -39,7 +41,9 @@ app.get("/api/givemeWOOORD", (req, res) => {
 });
 
 app.post("/api/guess", (req, res) => {
-    
+    const { guess } = req.body;
+    guesses.push(guess)
+    res.json({ guesses });
 });
 
 app.listen(4000, () => console.log("Server running on port 4000"));
