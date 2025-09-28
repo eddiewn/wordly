@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react"
+import { useState, useEffect} from "react"
 
 function App() {
     const [word, setWord] = useState<string>("");
@@ -26,6 +26,16 @@ function getAttemptRange(a: number) {
     return { start, end };
 }
 
+    const keyDownFunction = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if(event.key === "Backspace") {
+            // Handle backspace
+        } else if(event.key === "Enter") {
+            setAttempt(attempt + 1);
+        } else if(event.key.length === 1 && event.key.match(/[a-z]/i)) {
+            // Handle letter input
+        }
+    };
+
 return (
 
     
@@ -35,11 +45,11 @@ return (
                 i+1 >= getAttemptRange(attempt).start && i < getAttemptRange(attempt).end
                 ?
                 <div key={i} className="border-2 border-black bg-amber-300 aspect-square">
-                    <input type="text" maxLength={1} className="w-full h-full text-center uppercase"/>
+                    <input type="text" maxLength={1} onKeyDown={keyDownFunction} className="w-full h-full text-center uppercase"/>
                 </div>
                 : 
                 <div key={i} className="flex items-center justify-center border-2 border-black bg-blue-300  aspect-square">
-                    <p className="text-center uppercase m-auto" >no</p>
+                    <p className="text-center uppercase m-auto">no</p>
                 </div>
         ))}
         </div>

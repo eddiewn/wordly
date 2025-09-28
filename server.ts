@@ -31,9 +31,15 @@ const words = [
     "spice"
 ];
 
+const pastGuesses: string[] = [];
+
 app.get("/api/givemeWOOORD", (req, res) => {
     const randomWord = words[Math.floor(Math.random() * words.length)];
     res.json({ word: randomWord });
+});
+
+app.post("/api/guess", (req, res) => {
+    
 });
 
 app.listen(4000, () => console.log("Server running on port 4000"));
