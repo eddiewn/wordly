@@ -34,16 +34,25 @@ const words = [
 ];
 
 const guesses: string[] = [];
+let attempts: number = 0;
 
 app.get("/api/givemeWOOORD", (req, res) => {
     const randomWord = words[Math.floor(Math.random() * words.length)];
     res.json({ word: randomWord });
 });
 
-app.post("/api/guess", (req, res) => {
+app.post("/api/guesses", (req, res) => {
     const { guess } = req.body;
+    const { attempt }  = req.body;
+    
+    attempts = attempt + 1;
     guesses.push(guess)
-    res.json({ guesses });
+    res.json({ guesses, attempts });
 });
+
+app.delete("/api/guesses", (req, res) => {
+    guesses.length = 0;
+    res.json({ message: "Guesses reset" });
+}); 
 
 app.listen(4000, () => console.log("Server running on port 4000"));

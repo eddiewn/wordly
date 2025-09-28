@@ -1,17 +1,18 @@
-import { useState, useEffect} from "react"
-import DisplayGrid from "./components/DisplayGrid"
-
+import {useState, useEffect} from "react";
+import DisplayGrid from "./components/DisplayGrid";
 
 function App() {
     const [word, setWord] = useState<string>("");
-    const [attempt, setAttempt] = useState<number>(1);
+    const [attempts, setAttempts] = useState<number>(1);
     const [currentGuess, setCurrentGuess] = useState<string[]>([]);
     const [guesses, setGuesses] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchWord = async () => {
             try {
-                const response = await fetch("http://localhost:4000/api/givemeWOOORD");
+                const response = await fetch(
+                    "http://localhost:4000/api/givemeWOOORD"
+                );
                 const data = await response.json();
                 setWord(data.word);
 
@@ -21,61 +22,86 @@ function App() {
             }
         };
         fetchWord();
-    }, [])
+    }, []);
 
+    useEffect(() => {
+        console.log("All guesses", guesses);
+    }, [guesses]);
 
-useEffect(() => {
-    console.log("All guesses", guesses);
-}, [guesses]);
-
-function getAttemptRange(a: number) {
-    const start = (a - 1) * 5 + 1;
-    const end = a * 5;
-    return { start, end };
-}
+    function getAttemptRange(a: number) {
+        const start = (a - 1) * 5 + 1;
+        const end = a * 5;
+        return {start, end};
+    }
 
     const keyDownFunction = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === "Backspace") {
+        if (event.key === "Backspace") {
             // Handle backspace
-        } else if(event.key === "Enter") {
-            setAttempt(attempt + 1);
+        } else if (event.key === "Enter") {
+            if (currentGuess.length !== 5) {
+                console.log("Not enough letters");
+                return;
+            }
+            setAttempts(attempts + 1);
 
             const postGuess = async () => {
                 try {
-                    const response = await fetch("http://localhost:4000/api/guess", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ guess: currentGuess.join("")})
-                    });
+                    const response = await fetch(
+                        "http://localhost:4000/api/guesses",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                guess: currentGuess.join(""),
+                                attempt: attempts,
+                            }),
+                        }
+                    );
                     const data = await response.json();
                     setGuesses(data.guesses);
+                    setAttempts(data.attempts);
                     setCurrentGuess([]);
                 } catch (error) {
                     console.error("Error posting guess:", error);
                 }
             };
             postGuess();
-
-        } else if(event.key.length === 1 && event.key.match(/[a-z]/i)) {
-            if(currentGuess.length < 5){
-              setCurrentGuess([...currentGuess, event.key.toUpperCase()])
-            }else{
+        } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
+            if (currentGuess.length < 5) {
+                setCurrentGuess([...currentGuess, event.key.toUpperCase()]);
+            } else {
                 console.log("Max letters reached");
             }
         }
     };
 
+    const resetFunc = async () => {
+        try {
+            await fetch("http://localhost:4000/api/guesses", {
+                method: "DELETE",
+            });
+            setGuesses([]);
+            setAttempts(1);
+            setCurrentGuess([]);
+            console.log("Guesses reset");
+        } catch (error) {
+            console.error("Error resetting guesses:", error);
+        }
+    };
 
-return (    
-    <>
-        <DisplayGrid attempt={attempt} keyDownFunction={keyDownFunction} getAttemptRange={getAttemptRange}/>
-        <div>
-            {word}
-        </div>
-    </>
-  )
+    return (
+        <>
+            <DisplayGrid
+                attempt={attempts}
+                keyDownFunction={keyDownFunction}
+                getAttemptRange={getAttemptRange}
+            />
+            <button className="cursor-pointer" onClick={resetFunc}>Reset server button</button>
+            <div>{word}</div>
+        </>
+    );
 }
 
-export default App
+export default App;
