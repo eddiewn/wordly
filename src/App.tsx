@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import DisplayGrid from "./components/DisplayGrid";
-
+import { fetchWord } from "./api";
 function App() {
     const [word, setWord] = useState<string>("");
     const [attempts, setAttempts] = useState<number>(1);
@@ -8,20 +8,7 @@ function App() {
     const [guesses, setGuesses] = useState<string[]>([]);
 
     useEffect(() => {
-        const fetchWord = async () => {
-            try {
-                const response = await fetch(
-                    "http://localhost:4000/api/givemeWOOORD"
-                );
-                const data = await response.json();
-                setWord(data.word);
-
-                console.log("Word:", data.word);
-            } catch (error) {
-                console.error("Error fetching word:", error);
-            }
-        };
-        fetchWord();
+        fetchWord(setWord);
     }, []);
 
     useEffect(() => {
