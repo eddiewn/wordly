@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import DisplayGrid from "./components/DisplayGrid";
 import { fetchWord } from "./api";
 import { postGuess } from "./api";
+import { resetGuesses } from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
@@ -33,6 +34,7 @@ function App() {
             }
             setAttempts(attempts + 1);
 
+            // Post the guess to the server
             postGuess(currentGuess, attempts, setGuesses, setAttempts, setCurrentGuess);
             
         } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
@@ -46,9 +48,10 @@ function App() {
 
     const resetFunc = async () => {
         try {
-            await fetch("http://localhost:4000/api/guesses", {
-                method: "DELETE",
-            });
+            
+            // Resets the server-side guesses and attempts
+            resetGuesses();
+
             setGuesses([]);
             setAttempts(1);
             setCurrentGuess([]);

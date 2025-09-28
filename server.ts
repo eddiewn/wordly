@@ -52,6 +52,7 @@ app.post("/api/guesses", (req, res) => {
 
 app.delete("/api/guesses", (req, res) => {
     guesses.length = 0;
+    attempts = 0;
     res.json({ message: "Guesses reset" });
 }); 
 

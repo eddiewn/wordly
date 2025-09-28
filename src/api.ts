@@ -38,3 +38,8 @@ export const postGuess = async (
         console.error("Error posting guess:", error);
     }
 };
+
+export const resetGuesses = async () => {
+    await fetch("http://localhost:4000/api/guesses", {
+        method: "DELETE",
+})};
