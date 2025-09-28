@@ -18,7 +18,7 @@ const words = [
     "melon",
     "plums",
     "chest",
-    "pearl",
+    "linus",
     "olive",
     "apric",
     "cider",
