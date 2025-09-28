@@ -1,6 +1,8 @@
 import {useState, useEffect} from "react";
 import DisplayGrid from "./components/DisplayGrid";
 import { fetchWord } from "./api";
+import { postGuess } from "./api";
+
 function App() {
     const [word, setWord] = useState<string>("");
     const [attempts, setAttempts] = useState<number>(1);
@@ -31,30 +33,8 @@ function App() {
             }
             setAttempts(attempts + 1);
 
-            const postGuess = async () => {
-                try {
-                    const response = await fetch(
-                        "http://localhost:4000/api/guesses",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                guess: currentGuess.join(""),
-                                attempt: attempts,
-                            }),
-                        }
-                    );
-                    const data = await response.json();
-                    setGuesses(data.guesses);
-                    setAttempts(data.attempts);
-                    setCurrentGuess([]);
-                } catch (error) {
-                    console.error("Error posting guess:", error);
-                }
-            };
-            postGuess();
+            postGuess(currentGuess, attempts, setGuesses, setAttempts, setCurrentGuess);
+            
         } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
             if (currentGuess.length < 5) {
                 setCurrentGuess([...currentGuess, event.key.toUpperCase()]);
