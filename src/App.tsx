@@ -1,8 +1,9 @@
 import {useState, useEffect} from "react";
 import DisplayGrid from "./components/DisplayGrid";
-import { fetchWord } from "./api";
-import { postGuess } from "./api";
-import { resetGuesses } from "./api";
+import {fetchWord} from "./api";
+import {postGuess} from "./api";
+import {resetGame} from "./api";
+import { fetchGuesses } from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
@@ -11,12 +12,18 @@ function App() {
     const [guesses, setGuesses] = useState<string[]>([]);
 
     useEffect(() => {
+        fetchGuesses(setGuesses, setAttempts);
+    }, []);
+
+    useEffect(() => {
         fetchWord(setWord);
     }, []);
 
     useEffect(() => {
         console.log("All guesses", guesses);
     }, [guesses]);
+
+
 
     function getAttemptRange(a: number) {
         const start = (a - 1) * 5 + 1;
@@ -32,11 +39,17 @@ function App() {
                 console.log("Not enough letters");
                 return;
             }
+            if (attempts === undefined) return;
             setAttempts(attempts + 1);
 
             // Post the guess to the server
-            postGuess(currentGuess, attempts, setGuesses, setAttempts, setCurrentGuess);
-            
+            postGuess(
+                currentGuess,
+                attempts,
+                setGuesses,
+                setAttempts,
+                setCurrentGuess
+            );
         } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
             if (currentGuess.length < 5) {
                 setCurrentGuess([...currentGuess, event.key.toUpperCase()]);
@@ -48,9 +61,8 @@ function App() {
 
     const resetFunc = async () => {
         try {
-            
             // Resets the server-side guesses and attempts
-            resetGuesses();
+            await resetGame();
 
             setGuesses([]);
             setAttempts(1);
@@ -63,12 +75,16 @@ function App() {
 
     return (
         <>
+            {attempts !== undefined &&
             <DisplayGrid
                 attempt={attempts}
                 keyDownFunction={keyDownFunction}
                 getAttemptRange={getAttemptRange}
             />
-            <button className="cursor-pointer" onClick={resetFunc}>Reset server button</button>
+            }
+            <button className="cursor-pointer" onClick={resetFunc}>
+                Reset server button
+            </button>
             <div>{word}</div>
         </>
     );

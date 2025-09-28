@@ -5,6 +5,7 @@ type Props = {
 }
 
 const DisplayGrid = ({ attempt, keyDownFunction, getAttemptRange }: Props) => {
+    
     return (
         <div className="w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5 ">
             {Array.from({ length: 30 }).map((_, i) => (

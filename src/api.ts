@@ -12,6 +12,20 @@ export const fetchWord = async (
     }
 };
 
+export const fetchGuesses = async (
+    setGuesses: React.Dispatch<React.SetStateAction<string[]>>,
+    setAttempts: React.Dispatch<React.SetStateAction<number>>
+) => {
+    try {
+        const response = await fetch("http://localhost:4000/api/guesses");
+        const data = await response.json();
+        setGuesses(data.guesses);
+        setAttempts(data.attempts);
+    } catch (error) {
+        console.error("Error fetching guesses:", error);
+    }
+};
+
 export const postGuess = async (
     currentGuess: string[],
     attempts: number,
@@ -39,7 +53,7 @@ export const postGuess = async (
     }
 };
 
-export const resetGuesses = async () => {
+export const resetGame = async () => {
     await fetch("http://localhost:4000/api/guesses", {
         method: "DELETE",
 })};
