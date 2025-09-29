@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import DisplayGrid from "./components/DisplayGrid";
 import {fetchWord} from "./api";
 import {postGuess} from "./api";
@@ -8,8 +8,10 @@ import { fetchGuesses } from "./api";
 function App() {
     const [word, setWord] = useState<string>("");
     const [attempts, setAttempts] = useState<number>(1);
-    const [currentGuess, setCurrentGuess] = useState<string[]>([]);
+    const [currentGuess, setCurrentGuess] = useState<string[]>(["", "", "", "", ""]);
     const [guesses, setGuesses] = useState<string[]>([]);
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
 
     useEffect(() => {
         fetchGuesses(setGuesses, setAttempts);
@@ -31,11 +33,11 @@ function App() {
         return {start, end};
     }
 
-    const keyDownFunction = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const keyDownFunction = (index: number) => (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Backspace") {
             // Handle backspace
         } else if (event.key === "Enter") {
-            if (currentGuess.length !== 5) {
+            if (currentGuess.some(letter => letter === "")) {
                 console.log("Not enough letters");
                 return;
             }
@@ -48,14 +50,13 @@ function App() {
                 attempts,
                 setGuesses,
                 setAttempts,
-                setCurrentGuess
+                setCurrentGuess,
             );
         } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
-            if (currentGuess.length < 5) {
-                setCurrentGuess([...currentGuess, event.key.toUpperCase()]);
-            } else {
-                console.log("Max letters reached");
-            }
+                console.log("This is input" + index)
+                const newGuess = [...currentGuess];
+                newGuess[index] = event.key.toUpperCase();
+                setCurrentGuess(newGuess);                    
         }
     };
 
@@ -80,6 +81,7 @@ function App() {
                 attempt={attempts}
                 keyDownFunction={keyDownFunction}
                 getAttemptRange={getAttemptRange}
+                inputRefs={inputRefs}
             />
             }
             <button className="cursor-pointer" onClick={resetFunc}>
