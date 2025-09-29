@@ -1,17 +1,22 @@
-import {useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import DisplayGrid from "./components/DisplayGrid";
-import {fetchWord} from "./api";
-import {postGuess} from "./api";
-import {resetGame} from "./api";
+import { fetchWord } from "./api";
+import { postGuess } from "./api";
+import { resetGame } from "./api";
 import { fetchGuesses } from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
     const [attempts, setAttempts] = useState<number>(1);
-    const [currentGuess, setCurrentGuess] = useState<string[]>(["", "", "", "", ""]);
+    const [currentGuess, setCurrentGuess] = useState<string[]>([
+        "",
+        "",
+        "",
+        "",
+        "",
+    ]);
     const [guesses, setGuesses] = useState<string[]>([]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
 
     useEffect(() => {
         fetchGuesses(setGuesses, setAttempts);
@@ -25,41 +30,50 @@ function App() {
         console.log("All guesses", guesses);
     }, [guesses]);
 
-
-
     function getAttemptRange(a: number) {
         const start = (a - 1) * 5 + 1;
         const end = a * 5;
-        return {start, end};
+        return { start, end };
     }
 
-    const keyDownFunction = (index: number) => (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Backspace") {
-            // Handle backspace
-        } else if (event.key === "Enter") {
-            if (currentGuess.some(letter => letter === "")) {
-                console.log("Not enough letters");
-                return;
-            }
-            if (attempts === undefined) return;
-            setAttempts(attempts + 1);
+    const keyDownFunction =
+        (absoluteIndex: number) =>
+        (event: React.KeyboardEvent<HTMLInputElement>) => {
+            const startIndex = (attempts - 1) * 5; // absolute start of current row
+            const relativeIndex = absoluteIndex - startIndex; // 0-4 in currentGuess
 
-            // Post the guess to the server
-            postGuess(
-                currentGuess,
-                attempts,
-                setGuesses,
-                setAttempts,
-                setCurrentGuess,
-            );
-        } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
-                console.log("This is input" + index)
+            if (event.key === "Backspace") {
                 const newGuess = [...currentGuess];
-                newGuess[index] = event.key.toUpperCase();
-                setCurrentGuess(newGuess);                    
-        }
-    };
+                newGuess[relativeIndex] = "";
+                setCurrentGuess(newGuess);
+                if (relativeIndex > 0) {
+                    const prevAbsoluteIndex = absoluteIndex - 1;
+                    inputRefs.current[prevAbsoluteIndex]?.focus();
+                }
+            } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
+                const newGuess = [...currentGuess];
+                newGuess[relativeIndex] = event.key.toUpperCase();
+                setCurrentGuess(newGuess);
 
+                if (relativeIndex < 4) {
+                    const nextAbsoluteIndex = absoluteIndex + 1;
+                    inputRefs.current[nextAbsoluteIndex]?.focus();
+                }
+            } else if (event.key === "Enter") {
+                if (currentGuess.some((letter) => letter === "")) {
+                    console.log("Not enough letters");
+                    return;
+                }
+                postGuess(
+                    currentGuess,
+                    attempts,
+                    setGuesses,
+                    setAttempts,
+                    setCurrentGuess
+                );
+                setAttempts(attempts + 1);
+            }
+        };
     const resetFunc = async () => {
         try {
             // Resets the server-side guesses and attempts
@@ -67,7 +81,7 @@ function App() {
 
             setGuesses([]);
             setAttempts(1);
-            setCurrentGuess([]);
+            setCurrentGuess(["", "", "", "", ""]);
             console.log("Guesses reset");
         } catch (error) {
             console.error("Error resetting guesses:", error);
@@ -76,14 +90,15 @@ function App() {
 
     return (
         <>
-            {attempts !== undefined &&
-            <DisplayGrid
-                attempt={attempts}
-                keyDownFunction={keyDownFunction}
-                getAttemptRange={getAttemptRange}
-                inputRefs={inputRefs}
-            />
-            }
+            {attempts !== undefined && (
+                <DisplayGrid
+                    attempt={attempts}
+                    keyDownFunction={keyDownFunction}
+                    getAttemptRange={getAttemptRange}
+                    inputRefs={inputRefs}
+                    currentGuess={currentGuess}
+                />
+            )}
             <button className="cursor-pointer" onClick={resetFunc}>
                 Reset server button
             </button>
