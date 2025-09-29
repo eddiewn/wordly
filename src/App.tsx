@@ -91,6 +91,7 @@ function App() {
     return (
         <>
             {attempts !== undefined && (
+                <div className="flex justify-center w-full">
                 <DisplayGrid
                     attempt={attempts}
                     keyDownFunction={keyDownFunction}
@@ -98,6 +99,7 @@ function App() {
                     inputRefs={inputRefs}
                     currentGuess={currentGuess}
                 />
+                </div>
             )}
             <button className="cursor-pointer" onClick={resetFunc}>
                 Reset server button
