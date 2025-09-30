@@ -102,7 +102,7 @@ function App() {
                 </div>
             )}
             <button className="cursor-pointer" onClick={resetFunc}>
-                Reset server button
+                Reset Game Button
             </button>
             <div>{word}</div>
         </>
