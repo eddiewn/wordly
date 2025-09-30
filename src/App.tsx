@@ -71,7 +71,7 @@ function App() {
                     setAttempts,
                     setCurrentGuess
                 );
-                setAttempts(attempts + 1);
+                setAttempts(prev => prev + 1);
             }
         };
     const resetFunc = async () => {

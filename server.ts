@@ -43,6 +43,10 @@ app.get("/api/givemeWOOORD", (req, res) => {
     res.json({word: randomWord});
 });
 
+//
+//////////////////////////////////////////////
+//
+
 app.get("/api/guesses", (req, res) => {
     res.json({guesses, attempts});
 });
