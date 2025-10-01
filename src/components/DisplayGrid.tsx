@@ -1,42 +1,45 @@
-import type { RefObject } from "react";
-import { useLayoutEffect } from "react";
+import type {RefObject} from "react";
+import {useLayoutEffect} from "react";
 
 type Props = {
     attempt: number;
     keyDownFunction: (
         index: number
     ) => (event: React.KeyboardEvent<HTMLInputElement>) => void;
-    getAttemptRange: (a: number) => { start: number; end: number };
+    getAttemptRange: (a: number) => {start: number; end: number};
     inputRefs: RefObject<(HTMLInputElement | null)[]>;
     currentGuess: string[];
     guesses: string[];
 };
 
-
-
-
-const DisplayGrid = ({attempt, keyDownFunction, getAttemptRange, inputRefs, currentGuess, guesses}: Props) => {
-    const { start, end } = getAttemptRange(attempt);
+const DisplayGrid = ({
+    attempt,
+    keyDownFunction,
+    getAttemptRange,
+    inputRefs,
+    currentGuess,
+    guesses,
+}: Props) => {
+    const {start, end} = getAttemptRange(attempt);
 
     useLayoutEffect(() => {
         const firstIndex = start - 1;
-            inputRefs.current[firstIndex]?.focus();
+        inputRefs.current[firstIndex]?.focus();
     }, [attempt, start, inputRefs]);
 
     return (
         <div className="w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5">
-            {Array.from({ length: 30 }).map((_, i) => {
+            {Array.from({length: 30}).map((_, i) => {
                 if (i + 1 < start) {
                     return (
                         <div
-                        key={i}
-                        className="border-2 border-black bg-green-300 aspect-square"
+                            key={i}
+                            className="border-2 border-black bg-green-300 aspect-square"
                         >
-                                <h1>tihi</h1>
+                            <h1>tihi</h1>
                         </div>
                     );
-                }
-                else if (i + 1 >= start && i < end) {
+                } else if (i + 1 >= start && i < end) {
                     const relativeIndex = i - (start - 1);
                     return (
                         <div
@@ -45,6 +48,9 @@ const DisplayGrid = ({attempt, keyDownFunction, getAttemptRange, inputRefs, curr
                         >
                             <input
                                 value={currentGuess[relativeIndex] || ""}
+                                onChange={() => {
+                                    
+                                }}
                                 onKeyDown={keyDownFunction(i)}
                                 type="text"
                                 maxLength={1}
