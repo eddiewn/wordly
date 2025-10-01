@@ -76,6 +76,7 @@ function App() {
         };
     const resetFunc = async () => {
         try {
+            console.log(guesses)
             // Resets the server-side guesses and attempts
             await resetGame();
 
@@ -98,6 +99,7 @@ function App() {
                     getAttemptRange={getAttemptRange}
                     inputRefs={inputRefs}
                     currentGuess={currentGuess}
+                    guesses={guesses}
                 />
                 </div>
             )}

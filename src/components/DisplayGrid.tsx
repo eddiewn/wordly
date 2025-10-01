@@ -9,15 +9,13 @@ type Props = {
     getAttemptRange: (a: number) => { start: number; end: number };
     inputRefs: RefObject<(HTMLInputElement | null)[]>;
     currentGuess: string[];
+    guesses: string[];
 };
 
-const DisplayGrid = ({
-    attempt,
-    keyDownFunction,
-    getAttemptRange,
-    inputRefs,
-    currentGuess,
-}: Props) => {
+
+
+
+const DisplayGrid = ({attempt, keyDownFunction, getAttemptRange, inputRefs, currentGuess, guesses}: Props) => {
     const { start, end } = getAttemptRange(attempt);
 
     useLayoutEffect(() => {
@@ -28,7 +26,17 @@ const DisplayGrid = ({
     return (
         <div className="w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5">
             {Array.from({ length: 30 }).map((_, i) => {
-                if (i + 1 >= start && i < end) {
+                if (i + 1 < start) {
+                    return (
+                        <div
+                        key={i}
+                        className="border-2 border-black bg-green-300 aspect-square"
+                        >
+                                <h1>tihi</h1>
+                        </div>
+                    );
+                }
+                else if (i + 1 >= start && i < end) {
                     const relativeIndex = i - (start - 1);
                     return (
                         <div
