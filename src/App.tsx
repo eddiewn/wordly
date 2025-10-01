@@ -82,7 +82,7 @@ function App() {
             // Resets the server-side guesses and attempts
             await resetGame();
 
-            setGuesses(["", "", "", "", ""]);
+            setGuesses([]);
             setAttempts(1);
             setCurrentGuess(["", "", "", "", ""]);
             console.log("Guesses reset");
