@@ -47,7 +47,7 @@ export const postGuess = async (
         const data = await response.json();
         setGuesses(data.guesses);
         setAttempts(data.attempts);
-        setCurrentGuess([]);
+        setCurrentGuess(["", "", "", "", ""]);
     } catch (error) {
         console.error("Error posting guess:", error);
     }

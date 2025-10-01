@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import {useState, useEffect, useRef} from "react";
 import DisplayGrid from "./components/DisplayGrid";
-import { fetchWord } from "./api";
-import { postGuess } from "./api";
-import { resetGame } from "./api";
-import { fetchGuesses } from "./api";
+import {fetchWord} from "./api";
+import {postGuess} from "./api";
+import {resetGame} from "./api";
+import {fetchGuesses} from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
@@ -33,7 +33,7 @@ function App() {
     function getAttemptRange(a: number) {
         const start = (a - 1) * 5 + 1;
         const end = a * 5;
-        return { start, end };
+        return {start, end};
     }
 
     const keyDownFunction =
@@ -71,16 +71,18 @@ function App() {
                     setAttempts,
                     setCurrentGuess
                 );
-                setAttempts(prev => prev + 1);
+                setCurrentGuess(["", "", "", "", ""]);
+                setAttempts((prev) => prev + 1);
             }
         };
+
     const resetFunc = async () => {
         try {
-            console.log(guesses)
+            console.log(guesses);
             // Resets the server-side guesses and attempts
             await resetGame();
 
-            setGuesses([]);
+            setGuesses(["", "", "", "", ""]);
             setAttempts(1);
             setCurrentGuess(["", "", "", "", ""]);
             console.log("Guesses reset");
@@ -93,14 +95,14 @@ function App() {
         <>
             {attempts !== undefined && (
                 <div className="flex justify-center w-full">
-                <DisplayGrid
-                    attempt={attempts}
-                    keyDownFunction={keyDownFunction}
-                    getAttemptRange={getAttemptRange}
-                    inputRefs={inputRefs}
-                    currentGuess={currentGuess}
-                    guesses={guesses}
-                />
+                    <DisplayGrid
+                        attempt={attempts}
+                        keyDownFunction={keyDownFunction}
+                        getAttemptRange={getAttemptRange}
+                        inputRefs={inputRefs}
+                        currentGuess={currentGuess}
+                        guesses={guesses}
+                    />
                 </div>
             )}
             <button className="cursor-pointer" onClick={resetFunc}>
