@@ -21,9 +21,6 @@ function App() {
 
     useEffect(() => {
         fetchGuesses(setGuesses, setAttempts);
-    }, []);
-
-    useEffect(() => {
         fetchWord(setWord);
     }, []);
 
