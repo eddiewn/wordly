@@ -10,9 +10,8 @@ type Props = {
     inputRefs: RefObject<(HTMLInputElement | null)[]>;
     currentGuess: string[];
     guesses: string[];
+    check2d: number[][];
 };
-
-
 
 const DisplayGrid = ({
     attempt,
@@ -21,6 +20,7 @@ const DisplayGrid = ({
     inputRefs,
     currentGuess,
     guesses,
+    check2d,
 }: Props) => {
     const {start, end} = getAttemptRange(attempt);
 
@@ -34,17 +34,38 @@ const DisplayGrid = ({
             {Array.from({length: 30}).map((_, i) => {
                 if (i + 1 < start) {
                     const row = Math.floor(i / 5);
-                    const printin: string[] = guesses[row]?.split("") || [];
                     const column = i % 5;
+                    const printin: string[] = guesses[row]?.split("") || [];
+                    console.log(check2d);
 
-                    return (
-                        <div
-                            key={i}
-                            className="border-2 border-black bg-green-300 aspect-square"
-                        >
-                            {printin[column] || ""}
-                        </div>
-                    );
+                    if (check2d[row] && check2d[row][column] == 1) {
+                        return (
+                            <div
+                                key={i}
+                                className="border-2 border-black bg-green-300 aspect-square"
+                            >
+                                {printin[column] || ""}
+                            </div>
+                        );
+                    } else if(check2d[row] && check2d[row][column] == 2){
+                        return (
+                            <div
+                                key={i}
+                                className="border-2 border-black bg-yellow-700 aspect-square"
+                            >
+                                {printin[column] || ""}
+                            </div>
+                        );
+                    }else{
+                        return (
+                            <div
+                                key={i}
+                                className="border-2 border-black bg-gray-700 aspect-square"
+                            >
+                                {printin[column] || ""}
+                            </div>
+                        );
+                    }
                 } else if (i + 1 >= start && i < end) {
                     const relativeIndex = i - (start - 1);
                     return (

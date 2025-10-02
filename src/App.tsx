@@ -16,8 +16,8 @@ function App() {
         "",
     ]);
     const [guesses, setGuesses] = useState<string[]>([]);
+    const [check2d, setCheck2d] = useState<number[][]>([]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
 
     useEffect(() => {
         fetchGuesses(setGuesses, setAttempts);
@@ -26,7 +26,8 @@ function App() {
 
     useEffect(() => {
         console.log("All guesses", guesses);
-    }, [guesses]);
+        console.log(check2d);
+    }, [guesses, check2d]);
 
     function getAttemptRange(a: number) {
         const start = (a - 1) * 5 + 1;
@@ -34,31 +35,27 @@ function App() {
         return {start, end};
     }
 
-    function endGame(){
-        alert("You won!")
+    function endGame() {
+        alert("You won!");
     }
 
-
     function checkLetters(word: string, currentGuess: string[]) {
-        const wordArray = [...word]
+        const wordArray = [...word];
         const lowercaseCurrent = currentGuess.join("").toLowerCase().split("");
         const theTruthArray: number[] = [];
         lowercaseCurrent.forEach((letter, i) => {
-            if(letter == wordArray[i]){
-                console.log(`${letter} is correct`)
-                theTruthArray.push(1)
+            if (letter == wordArray[i]) {
+                console.log(`${letter} is correct`);
+                theTruthArray.push(1);
                 return;
-            }else if(wordArray.includes(letter)){
-                theTruthArray.push(2)
-            }else{
-                theTruthArray.push(3)
+            } else if (wordArray.includes(letter)) {
+                theTruthArray.push(2);
+            } else {
+                theTruthArray.push(3);
             }
         });
-
-        console.log("I checked the letters")
-        console.log(theTruthArray)
-
-    }   
+        setCheck2d((prev) => [...prev, theTruthArray]);
+    }
 
     const keyDownFunction =
         (absoluteIndex: number) =>
@@ -88,23 +85,20 @@ function App() {
                     console.log("Not enough letters");
                     return;
                 }
-                if(currentGuess.join("").toLowerCase() == word){
+                if (currentGuess.join("").toLowerCase() == word) {
                     endGame();
                     return;
                 }
-
                 checkLetters(word, currentGuess);
-
                 postGuess(
                     currentGuess,
                     attempts,
                     setGuesses,
                     setAttempts,
-                    setCurrentGuess,
+                    setCurrentGuess
                 );
                 setCurrentGuess(["", "", "", "", ""]);
                 setAttempts((prev) => prev + 1);
-
             }
         };
 
@@ -134,6 +128,7 @@ function App() {
                         inputRefs={inputRefs}
                         currentGuess={currentGuess}
                         guesses={guesses}
+                        check2d={check2d}
                     />
                 </div>
             )}
