@@ -27,13 +27,10 @@ const DisplayGrid = ({
         inputRefs.current[firstIndex]?.focus();
     }, [attempt, start, inputRefs]);
 
-
-
     return (
-        <div className="w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5">
+        <div className="w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5 transition duration-300">
             {Array.from({length: 30}).map((_, i) => {
                 if (i + 1 < start) {
-
                     const row = Math.floor(i / 5);
                     const printin: string[] = guesses[row]?.split("") || [];
                     const column = i % 5;

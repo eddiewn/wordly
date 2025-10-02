@@ -37,6 +37,10 @@ function App() {
         return {start, end};
     }
 
+     function endGame(){
+        alert("You won!")
+     }
+
     const keyDownFunction =
         (absoluteIndex: number) =>
         (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -63,6 +67,10 @@ function App() {
             } else if (event.key === "Enter") {
                 if (currentGuess.some((letter) => letter === "")) {
                     console.log("Not enough letters");
+                    return;
+                }
+                if(currentGuess.join("").toLowerCase() == word){
+                    endGame();
                     return;
                 }
                 postGuess(
