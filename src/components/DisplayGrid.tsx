@@ -12,6 +12,8 @@ type Props = {
     guesses: string[];
 };
 
+
+
 const DisplayGrid = ({
     attempt,
     keyDownFunction,

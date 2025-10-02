@@ -34,9 +34,31 @@ function App() {
         return {start, end};
     }
 
-     function endGame(){
+    function endGame(){
         alert("You won!")
-     }
+    }
+
+
+    function checkLetters(word: string, currentGuess: string[]) {
+        const wordArray = [...word]
+        const lowercaseCurrent = currentGuess.join("").toLowerCase().split("");
+        const theTruthArray: number[] = [];
+        lowercaseCurrent.forEach((letter, i) => {
+            if(letter == wordArray[i]){
+                console.log(`${letter} is correct`)
+                theTruthArray.push(1)
+                return;
+            }else if(wordArray.includes(letter)){
+                theTruthArray.push(2)
+            }else{
+                theTruthArray.push(3)
+            }
+        });
+
+        console.log("I checked the letters")
+        console.log(theTruthArray)
+
+    }   
 
     const keyDownFunction =
         (absoluteIndex: number) =>
@@ -70,6 +92,9 @@ function App() {
                     endGame();
                     return;
                 }
+
+                checkLetters(word, currentGuess);
+
                 postGuess(
                     currentGuess,
                     attempts,
