@@ -18,6 +18,7 @@ function App() {
     const [guesses, setGuesses] = useState<string[]>([]);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+
     useEffect(() => {
         fetchGuesses(setGuesses, setAttempts);
     }, []);
@@ -69,10 +70,11 @@ function App() {
                     attempts,
                     setGuesses,
                     setAttempts,
-                    setCurrentGuess
+                    setCurrentGuess,
                 );
                 setCurrentGuess(["", "", "", "", ""]);
                 setAttempts((prev) => prev + 1);
+
             }
         };
 
