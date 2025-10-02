@@ -42,7 +42,7 @@ const DisplayGrid = ({
                         return (
                             <div
                                 key={i}
-                                className="border-2 border-black bg-green-300 aspect-square"
+                                className="flex items-center justify-center border-2 border-black bg-green-300 aspect-square text-white"
                             >
                                 {printin[column] || ""}
                             </div>
@@ -51,7 +51,7 @@ const DisplayGrid = ({
                         return (
                             <div
                                 key={i}
-                                className="border-2 border-black bg-yellow-700 aspect-square"
+                                className="flex items-center justify-center border-2 border-black bg-yellow-400 aspect-square text-white"
                             >
                                 {printin[column] || ""}
                             </div>
@@ -60,7 +60,7 @@ const DisplayGrid = ({
                         return (
                             <div
                                 key={i}
-                                className="border-2 border-black bg-gray-700 aspect-square"
+                                className="flex items-center justify-center border-2 border-black bg-gray-700 aspect-square text-white"
                             >
                                 {printin[column] || ""}
                             </div>
@@ -90,7 +90,7 @@ const DisplayGrid = ({
                     return (
                         <div
                             key={i}
-                            className="flex items-center justify-center border-2 border-black bg-blue-300 aspect-square"
+                            className="flex items-center justify-center border-2 border-black bg-gray-800 aspect-square"
                         >
                             <p className="text-center uppercase m-auto">no</p>
                         </div>
