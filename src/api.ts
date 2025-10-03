@@ -2,7 +2,9 @@ export const fetchWord = async (
     setWord: React.Dispatch<React.SetStateAction<string>>
 ) => {
     try {
-        const response = await fetch("http://localhost:4000/api/givemeWOOORD");
+        const response = await fetch("http://localhost:4000/api/givemeWOOORD", {
+            credentials: "include",
+        });
         const data = await response.json();
         setWord(data.word);
 
@@ -17,7 +19,9 @@ export const fetchGuesses = async (
     setAttempts: React.Dispatch<React.SetStateAction<number>>
 ) => {
     try {
-        const response = await fetch("http://localhost:4000/api/guesses");
+        const response = await fetch("http://localhost:4000/api/guesses", {
+            credentials: "include",
+        });
         const data = await response.json();
         setGuesses(data.guesses);
         setAttempts(data.attempts);
@@ -43,6 +47,7 @@ export const postGuess = async (
                 guess: currentGuess.join(""),
                 attempt: attempts,
             }),
+            credentials: "include",
         });
         const data = await response.json();
         setGuesses(data.guesses);
@@ -56,4 +61,5 @@ export const postGuess = async (
 export const resetGame = async () => {
     await fetch("http://localhost:4000/api/guesses", {
         method: "DELETE",
+        credentials: "include",
 })};
