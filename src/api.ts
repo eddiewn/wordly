@@ -16,8 +16,10 @@ export const fetchWord = async (
 
 export const fetchGuesses = async (
     setGuesses: React.Dispatch<React.SetStateAction<string[]>>,
-    setAttempts: React.Dispatch<React.SetStateAction<number>>
+    setAttempts: React.Dispatch<React.SetStateAction<number>>,
+    setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>
 ) => {
+    console.log("Im now in fetch")
     try {
         const response = await fetch("http://localhost:4000/api/guesses", {
             credentials: "include",
@@ -25,6 +27,7 @@ export const fetchGuesses = async (
         const data = await response.json();
         setGuesses(data.guesses);
         setAttempts(data.attempts);
+        setCheck2d(data.check2d);
     } catch (error) {
         console.error("Error fetching guesses:", error);
     }
@@ -32,11 +35,12 @@ export const fetchGuesses = async (
 
 export const postGuess = async (
     currentGuess: string[],
-    attempts: number,
     setGuesses: React.Dispatch<React.SetStateAction<string[]>>,
     setAttempts: React.Dispatch<React.SetStateAction<number>>,
-    setCurrentGuess: React.Dispatch<React.SetStateAction<string[]>>
+    setCurrentGuess: React.Dispatch<React.SetStateAction<string[]>>,
+    setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>,
 ) => {
+    console.log("Im now in postGuess")
     try {
         const response = await fetch("http://localhost:4000/api/guesses", {
             method: "POST",
@@ -45,14 +49,19 @@ export const postGuess = async (
             },
             body: JSON.stringify({
                 guess: currentGuess.join(""),
-                attempt: attempts,
             }),
             credentials: "include",
         });
+
+        console.log("Im now past the fetch")
+
         const data = await response.json();
+        console.log(`This is data: ${data.guesses}`)
         setGuesses(data.guesses);
         setAttempts(data.attempts);
         setCurrentGuess(["", "", "", "", ""]);
+        console.log(data.check2d)
+        setCheck2d(data.check2d);
     } catch (error) {
         console.error("Error posting guess:", error);
     }

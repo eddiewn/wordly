@@ -20,9 +20,11 @@ function App() {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(() => {
-        fetchGuesses(setGuesses, setAttempts);
+        console.log("Im now in first useEffect")
+        fetchGuesses(setGuesses, setAttempts, setCheck2d);
         fetchWord(setWord);
     }, []);
+
 
     useEffect(() => {
         console.log("All guesses", guesses);
@@ -39,24 +41,7 @@ function App() {
         alert("You won!");
     }
 
-    function checkLetters(word: string, currentGuess: string[]) {
-        const wordArray = [...word];
-        const lowercaseCurrent = currentGuess.join("").toLowerCase().split("");
-        const theTruthArray: number[] = [];
-        
-        lowercaseCurrent.forEach((letter, i) => {
-            if (letter == wordArray[i]) {
-                console.log(`${letter} is correct`);
-                theTruthArray.push(1);
-                return;
-            } else if (wordArray.includes(letter)) {
-                theTruthArray.push(2);
-            } else {
-                theTruthArray.push(3);
-            }
-        });
-        setCheck2d((prev) => [...prev, theTruthArray]);
-    }
+
 
     const keyDownFunction =
         (absoluteIndex: number) =>
@@ -90,13 +75,12 @@ function App() {
                     endGame();
                     return;
                 }
-                checkLetters(word, currentGuess);
                 postGuess(
                     currentGuess,
-                    attempts,
                     setGuesses,
                     setAttempts,
-                    setCurrentGuess
+                    setCurrentGuess,
+                    setCheck2d,
                 );
                 setCurrentGuess(["", "", "", "", ""]);
                 setAttempts((prev) => prev + 1);

@@ -8,6 +8,7 @@ declare module "express-session" {
     interface SessionData {
         guesses: string[];
         attempts: number;
+        check2d: number[][];
     }
 }
 
@@ -25,6 +26,19 @@ app.use(
         credentials: true,
     })
 );
+
+app.use((req, res, next) => {
+    if (!req.session.guesses) {
+        req.session.guesses = [];
+    }
+    if (req.session.attempts === undefined) {
+        req.session.attempts = 1;
+    }
+    if (!req.session.check2d) {
+        req.session.check2d = [];
+    }
+    next();
+});
 
 // My makeshift database
 const words = [
@@ -54,32 +68,66 @@ const words = [
 //////////////////////////////////////////////
 //
 
+const randomWord = words[Math.floor(Math.random() * words.length)];
+
+
 app.get("/api/givemeWOOORD", (req, res) => {
-    const randomWord = words[Math.floor(Math.random() * words.length)];
     res.json({word: randomWord});
 });
 
-
 app.get("/api/guesses", (req, res) => {
-    if (!req.session.guesses){
-        req.session.guesses = [];
-    } 
-    if (req.session.attempts === undefined){
-        req.session.attempts = 1;
-    }
-    res.json({guesses: req.session.guesses, attempts: req.session.attempts});
+    res.json({
+        guesses: req.session.guesses,
+        attempts: req.session.attempts,
+        check2d: req.session.check2d,
+    });
 });
 
 app.post("/api/guesses", (req, res) => {
-    const {guess} = req.body;
-    req.session.attempts! += 1;
-    req.session.guesses?.push(guess);
-    res.json({guesses: req.session.guesses, attempts: req.session.attempts});
+    try {
+        const {guess} = req.body;
+
+        if (!req.session.check2d) req.session.check2d = [];
+
+        function checkLetters(word: string, currentGuess: string[]) {
+            const wordArray = [...word];
+            const lowercaseCurrent = currentGuess
+                .join("")
+                .toLowerCase()
+                .split("");
+            const theTruthArray: number[] = [];
+
+            lowercaseCurrent.forEach((letter, i) => {
+                if (letter == wordArray[i]) {
+                    console.log(`${letter} is correct`);
+                    theTruthArray.push(1);
+                    return;
+                } else if (wordArray.includes(letter)) {
+                    theTruthArray.push(2);
+                } else {
+                    theTruthArray.push(3);
+                }
+            });
+            req.session.check2d?.push(theTruthArray);
+        }
+        checkLetters(randomWord, guess.split(""));
+
+        req.session.attempts! += 1;
+        req.session.guesses?.push(guess);
+        res.json({
+            guesses: req.session.guesses,
+            attempts: req.session.attempts,
+            check2d: req.session.check2d,
+        });
+    } catch (error) {
+        console.error("Error deluxu style in post guesses", error);
+    }
 });
 
 app.delete("/api/guesses", (req, res) => {
     req.session.guesses = [];
     req.session.attempts = 1;
+    req.session.check2d = [];
     res.json({message: "Guesses and attempts reset"});
 });
 

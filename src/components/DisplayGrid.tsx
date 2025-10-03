@@ -39,6 +39,7 @@ const DisplayGrid = ({
                     console.log(check2d);
 
                     if (check2d[row] && check2d[row][column] == 1) {
+                        console.log(check2d)
                         return (
                             <div
                                 key={i}
