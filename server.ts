@@ -1,15 +1,21 @@
 import express from "express";
-const app = express();
-
+import session from "express-session"
 import cors from "cors";
 
-app.use(express.json());
+const app = express();
 
+app.use(express.json());
+app.use(session({
+    secret: "sigmaskibidi",
+    resave: false,
+    saveUninitialized: true,
+}))
 app.use(
     cors({
         origin: "http://localhost:5173",
     })
 );
+
 
 // My makeshift database
 const words = [
