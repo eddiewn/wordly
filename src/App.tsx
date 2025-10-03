@@ -43,6 +43,7 @@ function App() {
         const wordArray = [...word];
         const lowercaseCurrent = currentGuess.join("").toLowerCase().split("");
         const theTruthArray: number[] = [];
+        
         lowercaseCurrent.forEach((letter, i) => {
             if (letter == wordArray[i]) {
                 console.log(`${letter} is correct`);
