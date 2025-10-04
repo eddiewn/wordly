@@ -39,7 +39,7 @@ const DisplayGrid = ({
                     console.log(check2d);
 
                     if (check2d[row] && check2d[row][column] == 1) {
-                        console.log(check2d)
+                        console.log(check2d);
                         return (
                             <div
                                 key={i}
@@ -48,7 +48,7 @@ const DisplayGrid = ({
                                 {printin[column] || ""}
                             </div>
                         );
-                    } else if(check2d[row] && check2d[row][column] == 2){
+                    } else if (check2d[row] && check2d[row][column] == 2) {
                         return (
                             <div
                                 key={i}
@@ -57,7 +57,7 @@ const DisplayGrid = ({
                                 {printin[column] || ""}
                             </div>
                         );
-                    }else{
+                    } else {
                         return (
                             <div
                                 key={i}
@@ -69,6 +69,7 @@ const DisplayGrid = ({
                     }
                 } else if (i + 1 >= start && i < end) {
                     const relativeIndex = i - (start - 1);
+
                     return (
                         <div
                             key={i}
@@ -76,7 +77,6 @@ const DisplayGrid = ({
                         >
                             <input
                                 value={currentGuess[relativeIndex] || ""}
-                                readOnly
                                 onChange={() => {}}
                                 onKeyDown={keyDownFunction(i)}
                                 type="text"
@@ -94,8 +94,7 @@ const DisplayGrid = ({
                         <div
                             key={i}
                             className="flex items-center justify-center border-2 border-black bg-gray-700 aspect-square"
-                        >
-                        </div>
+                        ></div>
                     );
                 }
             })}

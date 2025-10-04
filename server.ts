@@ -22,7 +22,7 @@ app.use(
 );
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: true,
         credentials: true,
     })
 );
@@ -130,4 +130,4 @@ app.delete("/api/guesses", (req, res) => {
     res.json({message: "Guesses and attempts reset"});
 });
 
-app.listen(4000, () => console.log("Server running on port 4000"));
+app.listen(4000, '0.0.0.0', () => console.log("Server running on port 4000"));

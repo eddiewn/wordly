@@ -41,8 +41,6 @@ function App() {
         alert("You won!");
     }
 
-
-
     const keyDownFunction =
         (absoluteIndex: number) =>
         (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -61,7 +59,6 @@ function App() {
                 const newGuess = [...currentGuess];
                 newGuess[relativeIndex] = event.key.toUpperCase();
                 setCurrentGuess(newGuess);
-
                 if (relativeIndex < 4) {
                     const nextAbsoluteIndex = absoluteIndex + 1;
                     inputRefs.current[nextAbsoluteIndex]?.focus();
@@ -75,6 +72,7 @@ function App() {
                     endGame();
                     return;
                 }
+
                 postGuess(
                     currentGuess,
                     setGuesses,
