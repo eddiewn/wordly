@@ -73,7 +73,7 @@ const DisplayGrid = ({
                     return (
                         <div
                             key={i}
-                            className="border-2 border-black bg-gray-700 aspect-square"
+                            className="border-2 border-black bg-gray-700 aspect-square text-white"
                         >
                             <input
                                 value={currentGuess[relativeIndex] || ""}
