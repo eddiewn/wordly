@@ -104,6 +104,10 @@ function App() {
 
     return (
         <>
+        <div className="h-screen">
+            <div className="py-8">
+                <h1 className="text-center text-4xl text-blue-50 font-mono">Wordly</h1>
+            </div>
             {attempts !== undefined && (
                 <div className="flex justify-center w-full">
                     <DisplayGrid
@@ -121,6 +125,7 @@ function App() {
                 Reset Game Button
             </button>
             <div>{word}</div>
+        </div>
         </>
     );
 }

@@ -43,7 +43,7 @@ const DisplayGrid = ({
                         return (
                             <div
                                 key={i}
-                                className="flex items-center justify-center border-2 border-black bg-green-300 aspect-square text-white"
+                                className="flex items-center justify-center border-2 border-black bg-green-300 aspect-square text-white rounded"
                             >
                                 {printin[column] || ""}
                             </div>
@@ -52,7 +52,7 @@ const DisplayGrid = ({
                         return (
                             <div
                                 key={i}
-                                className="flex items-center justify-center border-2 border-black bg-yellow-400 aspect-square text-white"
+                                className="flex items-center justify-center border-2 border-black bg-yellow-400 aspect-square text-white rounded"
                             >
                                 {printin[column] || ""}
                             </div>
@@ -61,7 +61,7 @@ const DisplayGrid = ({
                         return (
                             <div
                                 key={i}
-                                className="flex items-center justify-center border-2 border-black bg-gray-700 aspect-square text-white"
+                                className="flex items-center justify-center border-2 border-black bg-gray-600 aspect-square text-white rounded"
                             >
                                 {printin[column] || ""}
                             </div>
@@ -72,7 +72,7 @@ const DisplayGrid = ({
                     return (
                         <div
                             key={i}
-                            className="border-2 border-black bg-amber-300 aspect-square"
+                            className="border-2 border-black bg-gray-700 aspect-square"
                         >
                             <input
                                 value={currentGuess[relativeIndex] || ""}
@@ -80,7 +80,7 @@ const DisplayGrid = ({
                                 onKeyDown={keyDownFunction(i)}
                                 type="text"
                                 maxLength={1}
-                                className="w-full h-full text-center uppercase"
+                                className="w-full h-full text-center uppercase outline-none caret-transparent"
                                 ref={(el) => {
                                     inputRefs.current[i] = el;
                                 }}
@@ -91,9 +91,8 @@ const DisplayGrid = ({
                     return (
                         <div
                             key={i}
-                            className="flex items-center justify-center border-2 border-black bg-gray-800 aspect-square"
+                            className="flex items-center justify-center border-2 border-black bg-gray-700 aspect-square"
                         >
-                            <p className="text-center uppercase m-auto">no</p>
                         </div>
                     );
                 }

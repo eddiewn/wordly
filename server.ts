@@ -26,7 +26,6 @@ app.use(
         credentials: true,
     })
 );
-
 app.use((req, res, next) => {
     if (!req.session.guesses) {
         req.session.guesses = [];
