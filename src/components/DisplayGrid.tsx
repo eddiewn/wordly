@@ -30,7 +30,7 @@ const DisplayGrid = ({
     }, [attempt, start, inputRefs]);
 
     return (
-        <div className="w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5 transition duration-300">
+        <div className="w-[80%] md:w-[50%] lg:w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5 transition duration-300">
             {Array.from({length: 30}).map((_, i) => {
                 if (i + 1 < start) {
                     const row = Math.floor(i / 5);
@@ -76,11 +76,13 @@ const DisplayGrid = ({
                         >
                             <input
                                 value={currentGuess[relativeIndex] || ""}
+                                readOnly
                                 onChange={() => {}}
                                 onKeyDown={keyDownFunction(i)}
                                 type="text"
                                 maxLength={1}
-                                className="w-full h-full text-center uppercase outline-none caret-transparent"
+                                // make caret-transparent when testing done
+                                className="w-full h-full text-center uppercase outline-none"
                                 ref={(el) => {
                                     inputRefs.current[i] = el;
                                 }}
