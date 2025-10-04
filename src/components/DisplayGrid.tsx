@@ -30,7 +30,7 @@ const DisplayGrid = ({
     }, [attempt, start, inputRefs]);
 
     return (
-        <div className="w-[80%] md:w-[50%] lg:w-[20%] grid grid-cols-5 grid-rows-7 gap-1.5 transition duration-300">
+        <div className="w-4/5 md:w-1/2 lg:w-1/5 grid grid-cols-5 grid-rows-7 gap-1.5 transition duration-300">
             {Array.from({length: 30}).map((_, i) => {
                 if (i + 1 < start) {
                     const row = Math.floor(i / 5);
