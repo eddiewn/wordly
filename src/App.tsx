@@ -133,10 +133,10 @@ function App() {
                 </div>
             )}
 
-            <button className="cursor-pointer z-100" onClick={resetFunc}>
+            {/* <button className="cursor-pointer z-100" onClick={resetFunc}>
                 Reset Game Button
             </button>
-            <div>{word}</div>
+            <div>{word}</div> */}
         </div>
 
 

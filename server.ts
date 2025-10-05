@@ -98,7 +98,6 @@ app.post("/api/guesses", (req, res) => {
 
             lowercaseCurrent.forEach((letter, i) => {
                 if (letter == wordArray[i]) {
-                    console.log(`${letter} is correct`);
                     theTruthArray.push(1);
                     return;
                 } else if (wordArray.includes(letter)) {
