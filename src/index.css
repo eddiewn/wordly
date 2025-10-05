@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 body{
-    background-image: linear-gradient(to bottom right, #2e3440, #4c566a);
+    background-color: #263341;
 }

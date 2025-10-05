@@ -115,7 +115,7 @@ function App() {
             className="h-screen w-screen fixed z-40">
         </div>
         <div className="h-screen">
-            <div className="py-8">
+            <div className="py-18">
                 <h1 className="text-center text-4xl text-blue-50 font-mono">Wordly</h1>
             </div>
             {attempts !== undefined && (

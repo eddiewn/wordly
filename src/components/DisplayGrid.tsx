@@ -74,7 +74,7 @@ const DisplayGrid = ({
                     return (
                         <div
                             key={i}
-                            className="border-2 border-black bg-gray-700 aspect-square text-white"
+                            className="border-2 border-black bg-gray-700 aspect-square text-white rounded"
                         >
                             <input
                                 value={currentGuess[relativeIndex] || ""}
@@ -96,7 +96,7 @@ const DisplayGrid = ({
                     return (
                         <div
                             key={i}
-                            className="flex items-center justify-center border-2 border-black bg-gray-700 aspect-square"
+                            className="flex items-center justify-center border-2 border-black bg-gray-700 aspect-square rounded"
                         ></div>
                     );
                 }
