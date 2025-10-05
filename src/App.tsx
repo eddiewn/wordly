@@ -108,13 +108,8 @@ function App() {
 
     return (
         <>
-        <div 
-        onClick={() => { 
-            inputRefs.current[activeInputIndex.current]?.focus();
-        }}   
-        className="h-screen w-screen fixed z-40">
+
             
-        </div>
         <div className="h-screen">
             <div className="py-8">
                 <h1 className="text-center text-4xl text-blue-50 font-mono">Wordly</h1>
@@ -139,6 +134,13 @@ function App() {
             </button>
             <div>{word}</div>
         </div>
+        <div 
+            onClick={() => { 
+                inputRefs.current[activeInputIndex.current]?.focus();
+            }}   
+            className="h-screen w-screen fixed z-40">
+        </div>
+
         </>
     );
 }
