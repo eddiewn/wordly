@@ -45,7 +45,7 @@ function App() {
         (absoluteIndex: number) =>
         (event: React.KeyboardEvent<HTMLInputElement>) => {
             const startIndex = (attempts - 1) * 5; // absolute start of current row
-            const relativeIndex = absoluteIndex - startIndex; // 0-4 in currentGuess
+            let relativeIndex = absoluteIndex - startIndex; // 0-4 in currentGuess
 
             if (event.key === "Backspace") {
                 const newGuess = [...currentGuess];
@@ -56,11 +56,14 @@ function App() {
                     inputRefs.current[prevAbsoluteIndex]?.focus();
                 }
             } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
+
+                //If relative index !== "", run the keydownfucntion AGANE
                 const newGuess = [...currentGuess];
-                if (newGuess.at(-1) !== "" && relativeIndex == 4) return;
+                if (newGuess.at(-1) !== "" && relativeIndex == 4) return;  
+                if(newGuess[relativeIndex] !== "") relativeIndex++ 
                 newGuess[relativeIndex] = event.key.toUpperCase();
                 setCurrentGuess(newGuess);
-                if (relativeIndex < 4) {
+                if (relativeIndex < 5) {
                     const nextAbsoluteIndex = absoluteIndex + 1;
                     inputRefs.current[nextAbsoluteIndex]?.focus();
                 }
