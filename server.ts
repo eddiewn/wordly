@@ -122,11 +122,4 @@ app.post("/api/guesses", (req, res) => {
     }
 });
 
-app.delete("/api/guesses", (req, res) => {
-    req.session.guesses = [];
-    req.session.attempts = 1;
-    req.session.check2d = [];
-    res.json({message: "Guesses and attempts reset"});
-});
-
 app.listen(4000, '0.0.0.0', () => console.log("Server running on port 4000"));

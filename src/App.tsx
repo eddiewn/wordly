@@ -2,7 +2,6 @@ import {useState, useEffect, useRef} from "react";
 import DisplayGrid from "./components/DisplayGrid";
 import {fetchWord} from "./api";
 import {postGuess} from "./api";
-import {resetGame} from "./api";
 import {fetchGuesses} from "./api";
 
 function App() {
@@ -90,21 +89,6 @@ function App() {
                 }
             }
         };
-
-    const resetFunc = async () => {
-        try {
-            console.log(guesses);
-            // Resets the server-side guesses and attempts
-            await resetGame();
-
-            setGuesses([]);
-            setAttempts(1);
-            setCurrentGuess(["", "", "", "", ""]);
-            console.log("Guesses reset");
-        } catch (error) {
-            console.error("Error resetting guesses:", error);
-        }
-    };
 
     return (
         <>
