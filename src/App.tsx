@@ -49,8 +49,10 @@ function App() {
 
             if (event.key === "Backspace") {
                 const newGuess = [...currentGuess];
+                if (newGuess[relativeIndex] === "") relativeIndex--
                 newGuess[relativeIndex] = "";
                 setCurrentGuess(newGuess);
+                relativeIndex++
                 if (relativeIndex > 0) {
                     const prevAbsoluteIndex = absoluteIndex - 1;
                     inputRefs.current[prevAbsoluteIndex]?.focus();
@@ -72,10 +74,7 @@ function App() {
                     console.log("Not enough letters");
                     return;
                 }
-                if (currentGuess.join("").toLowerCase() == word) {
-                    endGame();
-                    return;
-                }
+
                 postGuess(
                     currentGuess,
                     setGuesses,
@@ -85,6 +84,10 @@ function App() {
                 );
                 setCurrentGuess(["", "", "", "", ""]);
                 setAttempts((prev) => prev + 1);
+                if (currentGuess.join("").toLowerCase() == word) {
+                        endGame();
+                    return;
+                }
             }
         };
 
@@ -131,7 +134,7 @@ function App() {
                 </div>
             )}
 
-            <button className="cursor-pointer z-50" onClick={resetFunc}>
+            <button className="cursor-pointer z-100" onClick={resetFunc}>
                 Reset Game Button
             </button>
             <div>{word}</div>
