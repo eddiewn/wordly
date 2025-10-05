@@ -82,8 +82,7 @@ const DisplayGrid = ({
                                 onKeyDown={keyDownFunction(i)}
                                 type="text"
                                 maxLength={1}
-                                // make caret-transparent when testing done
-                                className="w-full h-full text-center uppercase outline-none"
+                                className="w-full h-full text-center uppercase outline-none caret-transparent"
                                 ref={(el) => {
                                     inputRefs.current[i] = el;
                                 }}

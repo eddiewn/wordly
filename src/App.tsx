@@ -76,7 +76,6 @@ function App() {
                     endGame();
                     return;
                 }
-
                 postGuess(
                     currentGuess,
                     setGuesses,
@@ -110,7 +109,7 @@ function App() {
         onClick={() => { 
             inputRefs.current[activeInputIndex.current]?.focus();
         }}   
-        className="h-screen w-screen fixed">
+        className="h-screen w-screen fixed z-40">
             
         </div>
         <div className="h-screen">
@@ -132,7 +131,7 @@ function App() {
                 </div>
             )}
 
-            <button className="cursor-pointer" onClick={resetFunc}>
+            <button className="cursor-pointer z-50" onClick={resetFunc}>
                 Reset Game Button
             </button>
             <div>{word}</div>
