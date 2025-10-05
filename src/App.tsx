@@ -57,7 +57,7 @@ function App() {
                 }
             } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
                 const newGuess = [...currentGuess];
-                if (newGuess[4] !== "" &&relativeIndex == 4) return;
+                if (newGuess.at(-1) !== "" && relativeIndex == 4) return;
                 newGuess[relativeIndex] = event.key.toUpperCase();
                 setCurrentGuess(newGuess);
                 if (relativeIndex < 4) {
