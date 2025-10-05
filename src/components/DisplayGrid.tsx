@@ -11,6 +11,7 @@ type Props = {
     currentGuess: string[];
     guesses: string[];
     check2d: number[][];
+    activeInputIndex: React.RefObject<number>;
 };
 
 const DisplayGrid = ({
@@ -21,8 +22,10 @@ const DisplayGrid = ({
     currentGuess,
     guesses,
     check2d,
+    activeInputIndex,
 }: Props) => {
     const {start, end} = getAttemptRange(attempt);
+
 
     useLayoutEffect(() => {
         const firstIndex = start - 1;
@@ -36,10 +39,8 @@ const DisplayGrid = ({
                     const row = Math.floor(i / 5);
                     const column = i % 5;
                     const printin: string[] = guesses[row]?.split("") || [];
-                    console.log(check2d);
 
                     if (check2d[row] && check2d[row][column] == 1) {
-                        console.log(check2d);
                         return (
                             <div
                                 key={i}
@@ -68,7 +69,7 @@ const DisplayGrid = ({
                         );
                     }
                 } else if (i + 1 >= start && i < end) {
-                    const relativeIndex = i - (start - 1);
+                    const relativeIndex = i - (start - 1);                    
 
                     return (
                         <div
@@ -86,6 +87,9 @@ const DisplayGrid = ({
                                 ref={(el) => {
                                     inputRefs.current[i] = el;
                                 }}
+                                onFocus={() => {
+                                    activeInputIndex.current = i
+                                }}
                             />
                         </div>
                     );
@@ -100,6 +104,10 @@ const DisplayGrid = ({
             })}
         </div>
     );
+
+    
 };
+
+
 
 export default DisplayGrid;

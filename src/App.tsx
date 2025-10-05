@@ -17,18 +17,18 @@ function App() {
     ]);
     const [guesses, setGuesses] = useState<string[]>([]);
     const [check2d, setCheck2d] = useState<number[][]>([]);
+
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const activeInputIndex = useRef<number>(0);
+
 
     useEffect(() => {
-        console.log("Im now in first useEffect")
         fetchGuesses(setGuesses, setAttempts, setCheck2d);
         fetchWord(setWord);
     }, []);
 
 
     useEffect(() => {
-        console.log("All guesses", guesses);
-        console.log(check2d);
     }, [guesses, check2d]);
 
     function getAttemptRange(a: number) {
@@ -102,6 +102,13 @@ function App() {
 
     return (
         <>
+        <div 
+        onClick={() => { 
+            inputRefs.current[activeInputIndex.current]?.focus();
+        }}   
+        className="h-screen w-screen fixed">
+            
+        </div>
         <div className="h-screen">
             <div className="py-8">
                 <h1 className="text-center text-4xl text-blue-50 font-mono">Wordly</h1>
@@ -116,9 +123,11 @@ function App() {
                         currentGuess={currentGuess}
                         guesses={guesses}
                         check2d={check2d}
+                        activeInputIndex={activeInputIndex}
                     />
                 </div>
             )}
+
             <button className="cursor-pointer" onClick={resetFunc}>
                 Reset Game Button
             </button>

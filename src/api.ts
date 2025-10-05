@@ -8,7 +8,6 @@ export const fetchWord = async (
         const data = await response.json();
         setWord(data.word);
 
-        console.log("Word:", data.word);
     } catch (error) {
         console.error("Error fetching word:", error);
     }
@@ -19,7 +18,6 @@ export const fetchGuesses = async (
     setAttempts: React.Dispatch<React.SetStateAction<number>>,
     setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>
 ) => {
-    console.log("Im now in fetch")
     try {
         const response = await fetch("/api/guesses", {
             credentials: "include",
@@ -40,7 +38,6 @@ export const postGuess = async (
     setCurrentGuess: React.Dispatch<React.SetStateAction<string[]>>,
     setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>,
 ) => {
-    console.log("Im now in postGuess")
     try {
         const response = await fetch("/api/guesses", {
             method: "POST",
@@ -53,14 +50,12 @@ export const postGuess = async (
             credentials: "include",
         });
 
-        console.log("Im now past the fetch")
 
         const data = await response.json();
         console.log(`This is data: ${data.guesses}`)
         setGuesses(data.guesses);
         setAttempts(data.attempts);
         setCurrentGuess(["", "", "", "", ""]);
-        console.log(data.check2d)
         setCheck2d(data.check2d);
     } catch (error) {
         console.error("Error posting guess:", error);
