@@ -69,7 +69,6 @@ const words = [
 
 const randomWord = words[Math.floor(Math.random() * words.length)];
 
-
 app.get("/api/givemeWOOORD", (req, res) => {
     res.json({word: randomWord});
 });

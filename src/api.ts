@@ -7,6 +7,7 @@ export const fetchWord = async (
         });
         const data = await response.json();
         setWord(data.word);
+        console.log(data.word)
 
     } catch (error) {
         console.error("Error fetching word:", error);

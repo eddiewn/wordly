@@ -20,21 +20,42 @@ function App() {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const activeInputIndex = useRef<number>(0);
 
-
-    useEffect(() => {
-        fetchGuesses(setGuesses, setAttempts, setCheck2d);
-        fetchWord(setWord);
-    }, []);
-
-
-    useEffect(() => {
-    }, [guesses, check2d]);
-
     function getAttemptRange(a: number) {
         const start = (a - 1) * 5 + 1;
         const end = a * 5;
         return {start, end};
     }
+
+const newDayFunc = () => {
+    const timeNow = new Date().getTime();
+    console.log("milliseconds now", timeNow);
+
+    const tomorrowDate = new Date();
+    tomorrowDate.setUTCHours(24, 0, 0, 0);
+
+    const msUntilTomorrow = tomorrowDate.getTime() - timeNow;
+    
+    console.log("I have been called master");
+    setTimeout(() => {
+        fetchWord(setWord);
+        setAttempts(1);
+        setGuesses([]);
+        setCheck2d([]);
+        setCurrentGuess(["", "", "", "", ""]);
+        activeInputIndex.current = 0;
+        inputRefs.current[0]?.focus();
+        newDayFunc();
+    }, msUntilTomorrow);
+}
+
+
+    useEffect(() => {
+        fetchGuesses(setGuesses, setAttempts, setCheck2d);
+        fetchWord(setWord);
+        newDayFunc();
+    }, []);
+
+
 
     function endGame() {
         alert("You won!");
