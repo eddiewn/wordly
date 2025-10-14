@@ -26,7 +26,6 @@ const DisplayGrid = ({
 }: Props) => {
     const {start, end} = getAttemptRange(attempt);
 
-
     useLayoutEffect(() => {
         const firstIndex = start - 1;
         inputRefs.current[firstIndex]?.focus();
@@ -69,7 +68,7 @@ const DisplayGrid = ({
                         );
                     }
                 } else if (i + 1 >= start && i < end) {
-                    const relativeIndex = i - (start - 1);                    
+                    const relativeIndex = i - (start - 1);
 
                     return (
                         <div
@@ -87,7 +86,7 @@ const DisplayGrid = ({
                                     inputRefs.current[i] = el;
                                 }}
                                 onFocus={() => {
-                                    activeInputIndex.current = i
+                                    activeInputIndex.current = i;
                                 }}
                             />
                         </div>
@@ -103,8 +102,6 @@ const DisplayGrid = ({
             })}
         </div>
     );
-
-    
 };
 
 export default DisplayGrid;

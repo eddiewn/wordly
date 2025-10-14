@@ -91,59 +91,33 @@ app.post("/api/guesses", (req, res) => {
         const {guess} = req.body;
 
         if (!req.session.check2d) req.session.check2d = [];
+        const printWordDoubleCheck = (word: string, currentGuess: string[]) => {
+            const check: number[] = [3, 3, 3, 3, 3];
+            const splitWord = word.toUpperCase().split("");
+            const funcGuess = [...currentGuess];
 
-                const printWordDoubleCheck = (word: string, currentGuess: string[]) => {
-                    const check:number[]= [3, 3, 3, 3, 3];
-                    const splitWord = word.toUpperCase().split("");
-                    const funcGuess = [...currentGuess];
-
-                    console.log(splitWord)
-                    console.log(funcGuess)     
-
-                    for (let i = 0; i < splitWord.length; i++) {
-                        if(splitWord[i] === funcGuess[i]) {
-                            check[i] = 1;
-                            splitWord[i] = "";
-                            funcGuess[i] = "";
-                        }
-                    }
-
-                    for (let i = 0; i < splitWord.length; i++) {
-                        if (funcGuess[i] !== "" && splitWord.includes(funcGuess[i])) {
-                            check[i] = 2;
-                            const index = splitWord.indexOf(funcGuess[i]);
-                            splitWord[index] = "";
-                            funcGuess[i] = "";
-                        }                    
-                    }
-                    console.log("Check array:", check);
-                    return req.session.check2d?.push(check);
+            // First pass: check for correct letters in correct positions
+            for (let i = 0; i < splitWord.length; i++) {
+                if (splitWord[i] === funcGuess[i]) {
+                    check[i] = 1;
+                    splitWord[i] = "";
+                    funcGuess[i] = "";
                 }
-                
+            }
+
+            // Second pass: check for correct letters in wrong positions
+            for (let i = 0; i < splitWord.length; i++) {
+                if (funcGuess[i] !== "" && splitWord.includes(funcGuess[i])) {
+                    check[i] = 2;
+                    const index = splitWord.indexOf(funcGuess[i]);
+                    splitWord[index] = "";
+                    funcGuess[i] = "";
+                }
+            }
+            return req.session.check2d?.push(check);
+        };
 
         printWordDoubleCheck(randomWord, guess);
-
-        // function checkLetters(word: string, currentGuess: string[]) {
-        //     const wordArray = [...word];
-        //     const lowercaseCurrent = currentGuess
-        //         .join("")
-        //         .toLowerCase()
-        //         .split("");
-        //     const theTruthArray: number[] = [];
-
-        //     lowercaseCurrent.forEach((letter, i) => {
-        //         if (letter == wordArray[i]) {
-        //             theTruthArray.push(1);
-        //             return;
-        //         } else if (wordArray.includes(letter)) {
-        //             theTruthArray.push(2);
-        //         } else {
-        //             theTruthArray.push(3);
-        //         }
-        //     });
-        //     req.session.check2d?.push(theTruthArray);
-        // }
-        // checkLetters(randomWord, guess.split(""));
 
         req.session.attempts! += 1;
         req.session.guesses?.push(guess);
@@ -164,4 +138,4 @@ app.delete("/api/guesses", (req, res) => {
     res.json({message: "Guesses and attempts reset"});
 });
 
-app.listen(4000, '0.0.0.0', () => console.log("Server running on port 4000"));
+app.listen(4000, "0.0.0.0", () => console.log("Server running on port 4000"));
