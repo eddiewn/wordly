@@ -67,9 +67,14 @@ const words = [
 //////////////////////////////////////////////
 //
 
-const randomWord = words[Math.floor(Math.random() * words.length)];
+let randomWord = "apple";
 
 app.get("/api/givemeWOOORD", (req, res) => {
+    res.json({word: randomWord});
+});
+
+app.get("/api/createWord", (req, res) => {
+    randomWord = words[Math.floor(Math.random() * words.length)];
     res.json({word: randomWord});
 });
 
@@ -119,6 +124,14 @@ app.post("/api/guesses", (req, res) => {
     } catch (error) {
         console.error("Error deluxu style in post guesses", error);
     }
+});
+
+
+app.delete("/api/guesses", (req, res) => {
+    req.session.guesses = [];
+    req.session.attempts = 1;
+    req.session.check2d = [];
+    res.json({message: "Guesses and attempts reset"});
 });
 
 app.listen(4000, '0.0.0.0', () => console.log("Server running on port 4000"));

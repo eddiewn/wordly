@@ -3,6 +3,8 @@ import DisplayGrid from "./components/DisplayGrid";
 import {fetchWord} from "./api";
 import {postGuess} from "./api";
 import {fetchGuesses} from "./api";
+import {createWord} from "./api";
+import {resetGame} from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
@@ -26,36 +28,38 @@ function App() {
         return {start, end};
     }
 
-const newDayFunc = () => {
-    const timeNow = new Date().getTime();
-    console.log("milliseconds now", timeNow);
+    const newDayFunc = () => {
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setUTCHours(0, 0, 0, 0);
+        tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
 
-    const tomorrowDate = new Date();
-    tomorrowDate.setUTCHours(24, 0, 0, 0);
+        const msUntilTomorrow = tomorrow.getTime() - now.getTime();
 
-    const msUntilTomorrow = tomorrowDate.getTime() - timeNow;
-    
-    console.log("I have been called master");
-    setTimeout(() => {
-        fetchWord(setWord);
-        setAttempts(1);
-        setGuesses([]);
-        setCheck2d([]);
-        setCurrentGuess(["", "", "", "", ""]);
-        activeInputIndex.current = 0;
-        inputRefs.current[0]?.focus();
-        newDayFunc();
-    }, msUntilTomorrow);
-}
+        console.log("I have been called master");
+        console.log("milliseconds until tomorrow", msUntilTomorrow);
 
+        setTimeout(() => {
+            currentGuess.forEach((_, i) => (currentGuess[i] = ""));
+            createWord(setWord);
+            setAttempts(1);
+            setGuesses([]);
+            setCheck2d([]);
+            setCurrentGuess(["", "", "", "", ""]);
+            
+            resetFunc();
+
+            activeInputIndex.current = 0;
+            inputRefs.current[0]?.focus();
+            newDayFunc();
+        }, msUntilTomorrow); // Change to msUntilTomorrow in production - 10000 for testing
+    };
 
     useEffect(() => {
+        newDayFunc();
         fetchGuesses(setGuesses, setAttempts, setCheck2d);
         fetchWord(setWord);
-        newDayFunc();
     }, []);
-
-
 
     function endGame() {
         alert("You won!");
@@ -69,20 +73,19 @@ const newDayFunc = () => {
 
             if (event.key === "Backspace") {
                 const newGuess = [...currentGuess];
-                if (newGuess[relativeIndex] === "") relativeIndex--
+                if (newGuess[relativeIndex] === "") relativeIndex--;
                 newGuess[relativeIndex] = "";
                 setCurrentGuess(newGuess);
-                relativeIndex++
+                relativeIndex++;
                 if (relativeIndex > 0) {
                     const prevAbsoluteIndex = absoluteIndex - 1;
                     inputRefs.current[prevAbsoluteIndex]?.focus();
                 }
             } else if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
-
                 //If relative index !== "", run the keydownfucntion AGANE
                 const newGuess = [...currentGuess];
-                if (newGuess.at(-1) !== "" && relativeIndex == 4) return;  
-                if(newGuess[relativeIndex] !== "") relativeIndex++ 
+                if (newGuess.at(-1) !== "" && relativeIndex == 4) return;
+                if (newGuess[relativeIndex] !== "") relativeIndex++;
                 newGuess[relativeIndex] = event.key.toUpperCase();
                 setCurrentGuess(newGuess);
                 if (relativeIndex < 5) {
@@ -100,51 +103,71 @@ const newDayFunc = () => {
                     setGuesses,
                     setAttempts,
                     setCurrentGuess,
-                    setCheck2d,
+                    setCheck2d
                 );
                 setCurrentGuess(["", "", "", "", ""]);
                 setAttempts((prev) => prev + 1);
                 if (currentGuess.join("").toLowerCase() == word) {
-                        endGame();
+                    endGame();
                     return;
                 }
             }
         };
 
+    const resetFunc = async () => {
+        try {
+            console.log(guesses);
+
+            // Resets the server-side guesses and attempts
+
+            await resetGame();
+
+            setGuesses([]);
+
+            setAttempts(1);
+
+            setCurrentGuess(["", "", "", "", ""]);
+
+            console.log("Guesses reset");
+        } catch (error) {
+            console.error("Error resetting guesses:", error);
+        }
+    };
+
     return (
         <>
-        <div 
-            onClick={() => { 
-                inputRefs.current[activeInputIndex.current]?.focus();
-            }}   
-            className="h-screen w-screen fixed z-40">
-        </div>
-        <div className="h-screen">
-            <div className="py-18">
-                <h1 className="text-center text-4xl text-blue-50 font-mono">Wordly</h1>
-            </div>
-            {attempts !== undefined && (
-                <div className="flex justify-center w-full">
-                    <DisplayGrid
-                        attempt={attempts}
-                        keyDownFunction={keyDownFunction}
-                        getAttemptRange={getAttemptRange}
-                        inputRefs={inputRefs}
-                        currentGuess={currentGuess}
-                        guesses={guesses}
-                        check2d={check2d}
-                        activeInputIndex={activeInputIndex}
-                    />
+            <div
+                onClick={() => {
+                    inputRefs.current[activeInputIndex.current]?.focus();
+                }}
+                className="h-screen w-screen fixed z-40"
+            ></div>
+            <div className="h-screen">
+                <div className="py-18">
+                    <h1 className="text-center text-4xl text-blue-50 font-mono">
+                        Wordly
+                    </h1>
                 </div>
-            )}
+                {attempts !== undefined && (
+                    <div className="flex justify-center w-full">
+                        <DisplayGrid
+                            attempt={attempts}
+                            keyDownFunction={keyDownFunction}
+                            getAttemptRange={getAttemptRange}
+                            inputRefs={inputRefs}
+                            currentGuess={currentGuess}
+                            guesses={guesses}
+                            check2d={check2d}
+                            activeInputIndex={activeInputIndex}
+                        />
+                    </div>
+                )}
 
-            {/* <button className="cursor-pointer z-100" onClick={resetFunc}>
+                {/* <button className="cursor-pointer z-100" onClick={resetFunc}>
                 Reset Game Button
             </button>
             <div>{word}</div> */}
-        </div>
-
-
+            </div>
         </>
     );
 }

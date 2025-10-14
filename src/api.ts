@@ -14,6 +14,33 @@ export const fetchWord = async (
     }
 };
 
+export const createWord = async (
+    setWord: React.Dispatch<React.SetStateAction<string>>
+) => {
+    try {
+        const reponse = await fetch("/api/createWord", {
+            credentials: "include",
+        });
+        const data = await reponse.json();
+        setWord(data.word);
+        console.log("New word created:", data.word);
+    } catch (error) {
+        console.error("Error creating word:", error);
+    }
+}
+
+export const resetGame = async () => {
+    try {
+        await fetch("/api/guesses", {
+            method: "DELETE",
+            credentials: "include",
+        });
+        console.log("Game reset successfully");
+    } catch (error) {
+        console.error("Error resetting game:", error);
+    }
+}
+
 export const fetchGuesses = async (
     setGuesses: React.Dispatch<React.SetStateAction<string[]>>,
     setAttempts: React.Dispatch<React.SetStateAction<number>>,
