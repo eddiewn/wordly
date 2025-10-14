@@ -9,13 +9,7 @@ import {resetGame} from "./api";
 function App() {
     const [word, setWord] = useState<string>("");
     const [attempts, setAttempts] = useState<number>(1);
-    const [currentGuess, setCurrentGuess] = useState<string[]>([
-        "",
-        "",
-        "",
-        "",
-        "",
-    ]);
+    const [currentGuess, setCurrentGuess] = useState<string[]>(["","","","","",]);
     const [guesses, setGuesses] = useState<string[]>([]);
     const [check2d, setCheck2d] = useState<number[][]>([]);
 
@@ -64,6 +58,8 @@ function App() {
     function endGame() {
         alert("You won!");
     }
+
+
 
     const keyDownFunction =
         (absoluteIndex: number) =>
@@ -117,9 +113,7 @@ function App() {
     const resetFunc = async () => {
         try {
             console.log(guesses);
-
             // Resets the server-side guesses and attempts
-
             await resetGame();
 
             setGuesses([]);

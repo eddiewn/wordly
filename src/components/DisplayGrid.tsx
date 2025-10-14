@@ -107,6 +107,4 @@ const DisplayGrid = ({
     
 };
 
-
-
 export default DisplayGrid;

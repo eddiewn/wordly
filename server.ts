@@ -92,27 +92,58 @@ app.post("/api/guesses", (req, res) => {
 
         if (!req.session.check2d) req.session.check2d = [];
 
-        function checkLetters(word: string, currentGuess: string[]) {
-            const wordArray = [...word];
-            const lowercaseCurrent = currentGuess
-                .join("")
-                .toLowerCase()
-                .split("");
-            const theTruthArray: number[] = [];
+                const printWordDoubleCheck = (word: string, currentGuess: string[]) => {
+                    const check:number[]= [3, 3, 3, 3, 3];
+                    const splitWord = word.toUpperCase().split("");
+                    const funcGuess = [...currentGuess];
 
-            lowercaseCurrent.forEach((letter, i) => {
-                if (letter == wordArray[i]) {
-                    theTruthArray.push(1);
-                    return;
-                } else if (wordArray.includes(letter)) {
-                    theTruthArray.push(2);
-                } else {
-                    theTruthArray.push(3);
+                    console.log(splitWord)
+                    console.log(funcGuess)     
+
+                    for (let i = 0; i < splitWord.length; i++) {
+                        if(splitWord[i] === funcGuess[i]) {
+                            check[i] = 1;
+                            splitWord[i] = "";
+                            funcGuess[i] = "";
+                        }
+                    }
+
+                    for (let i = 0; i < splitWord.length; i++) {
+                        if (funcGuess[i] !== "" && splitWord.includes(funcGuess[i])) {
+                            check[i] = 2;
+                            const index = splitWord.indexOf(funcGuess[i]);
+                            splitWord[index] = "";
+                            funcGuess[i] = "";
+                        }                    
+                    }
+                    console.log("Check array:", check);
+                    return req.session.check2d?.push(check);
                 }
-            });
-            req.session.check2d?.push(theTruthArray);
-        }
-        checkLetters(randomWord, guess.split(""));
+                
+
+        printWordDoubleCheck(randomWord, guess);
+
+        // function checkLetters(word: string, currentGuess: string[]) {
+        //     const wordArray = [...word];
+        //     const lowercaseCurrent = currentGuess
+        //         .join("")
+        //         .toLowerCase()
+        //         .split("");
+        //     const theTruthArray: number[] = [];
+
+        //     lowercaseCurrent.forEach((letter, i) => {
+        //         if (letter == wordArray[i]) {
+        //             theTruthArray.push(1);
+        //             return;
+        //         } else if (wordArray.includes(letter)) {
+        //             theTruthArray.push(2);
+        //         } else {
+        //             theTruthArray.push(3);
+        //         }
+        //     });
+        //     req.session.check2d?.push(theTruthArray);
+        // }
+        // checkLetters(randomWord, guess.split(""));
 
         req.session.attempts! += 1;
         req.session.guesses?.push(guess);
@@ -125,7 +156,6 @@ app.post("/api/guesses", (req, res) => {
         console.error("Error deluxu style in post guesses", error);
     }
 });
-
 
 app.delete("/api/guesses", (req, res) => {
     req.session.guesses = [];
