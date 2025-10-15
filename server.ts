@@ -1,6 +1,7 @@
 import express from "express";
 import session from "express-session";
 import cors from "cors";
+import cron from "node-cron";
 
 const app = express();
 
@@ -13,6 +14,7 @@ declare module "express-session" {
 }
 
 app.use(express.json());
+
 app.use(
     session({
         secret: "sigmaskibidi",
@@ -20,12 +22,14 @@ app.use(
         saveUninitialized: true,
     })
 );
+
 app.use(
     cors({
         origin: true,
         credentials: true,
     })
 );
+
 app.use((req, res, next) => {
     if (!req.session.guesses) {
         req.session.guesses = [];
@@ -35,6 +39,13 @@ app.use((req, res, next) => {
     }
     if (!req.session.check2d) {
         req.session.check2d = [];
+    }
+
+    if (new Date().toDateString() !== currentDay) {
+        req.session.guesses = [];
+        req.session.attempts = 1;
+        req.session.check2d = [];
+        currentDay = new Date().toDateString();
     }
     next();
 });
@@ -67,7 +78,15 @@ const words = [
 //////////////////////////////////////////////
 //
 
-let randomWord = "apple";
+let currentDay = new Date().toDateString();
+const initialWord = "truck";
+let randomWord = initialWord;
+
+cron.schedule("0 0 * * *", () => {
+    console.log("Running daily reset task at midnight");
+    randomWord = words[Math.floor(Math.random() * words.length)];
+    currentDay = new Date().toDateString();
+});
 
 app.get("/api/givemeWOOORD", (req, res) => {
     res.json({word: randomWord});

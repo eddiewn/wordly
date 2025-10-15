@@ -9,7 +9,13 @@ import {resetGame} from "./api";
 function App() {
     const [word, setWord] = useState<string>("");
     const [attempts, setAttempts] = useState<number>(1);
-    const [currentGuess, setCurrentGuess] = useState<string[]>(["","","","","",]);
+    const [currentGuess, setCurrentGuess] = useState<string[]>([
+        "",
+        "",
+        "",
+        "",
+        "",
+    ]);
     const [guesses, setGuesses] = useState<string[]>([]);
     const [check2d, setCheck2d] = useState<number[][]>([]);
 
@@ -40,7 +46,7 @@ function App() {
             setGuesses([]);
             setCheck2d([]);
             setCurrentGuess(["", "", "", "", ""]);
-            
+
             resetFunc();
 
             activeInputIndex.current = 0;
@@ -58,8 +64,6 @@ function App() {
     function endGame() {
         alert("You won!");
     }
-
-
 
     const keyDownFunction =
         (absoluteIndex: number) =>
