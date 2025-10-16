@@ -28,10 +28,6 @@ test.query(`SELECT * FROM words_list LIMIT 1`,(err, res) => {
     }
 });
 
-// test.query(`SELECT * from words_list WHERE word = "truck"`, (err,res) => {
-//     console.log("Query response", res.rows )
-// })
-
 const app = express();
 
 declare module "express-session" {
@@ -111,7 +107,8 @@ let currentDay = new Date().toDateString();
 const initialWord = "horbi";
 let randomWord = initialWord;
 
-cron.schedule("* * * * *", () => {
+// * * * * * for testing, runs every minute
+cron.schedule("0 0 * * *", () => {
     console.log("Running daily reset task at midnight");
     randomWord = words[Math.floor(Math.random() * words.length)];
     currentDay = new Date().toDateString();
