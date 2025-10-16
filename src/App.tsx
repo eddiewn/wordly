@@ -3,12 +3,10 @@ import DisplayGrid from "./components/DisplayGrid";
 import {fetchWord} from "./api";
 import {postGuess} from "./api";
 import {fetchGuesses} from "./api";
-import {createWord} from "./api";
-import {resetGame} from "./api";
+import {validateWord} from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
-    const [attempts, setAttempts] = useState<number>(1);
     const [currentGuess, setCurrentGuess] = useState<string[]>([
         "",
         "",
@@ -16,6 +14,8 @@ function App() {
         "",
         "",
     ]);
+
+    const [attempts, setAttempts] = useState<number>(1);
     const [guesses, setGuesses] = useState<string[]>([]);
     const [check2d, setCheck2d] = useState<number[][]>([]);
 
@@ -28,46 +28,22 @@ function App() {
         return {start, end};
     }
 
-    const newDayFunc = () => {
-        const now = new Date();
-        const tomorrow = new Date();
-        tomorrow.setUTCHours(0, 0, 0, 0);
-        tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-
-        const msUntilTomorrow = tomorrow.getTime() - now.getTime();
-
-        console.log("I have been called master");
-        console.log("milliseconds until tomorrow", msUntilTomorrow);
-
-        setTimeout(() => {
-            currentGuess.forEach((_, i) => (currentGuess[i] = ""));
-            createWord(setWord);
-            setAttempts(1);
-            setGuesses([]);
-            setCheck2d([]);
-            setCurrentGuess(["", "", "", "", ""]);
-
-            resetFunc();
-
-            activeInputIndex.current = 0;
-            inputRefs.current[0]?.focus();
-            newDayFunc();
-        }, msUntilTomorrow); // Change to msUntilTomorrow in production - 10000 for testing
-    };
-
     useEffect(() => {
-        newDayFunc();
         fetchGuesses(setGuesses, setAttempts, setCheck2d);
         fetchWord(setWord);
     }, []);
+
+    useEffect(() => {
+        fetchGuesses(setGuesses, setAttempts, setCheck2d);
+    },[attempts])
 
     function endGame() {
         alert("You won!");
     }
 
-    const keyDownFunction =
+    const keyDownFunction = 
         (absoluteIndex: number) =>
-        (event: React.KeyboardEvent<HTMLInputElement>) => {
+        async (event: React.KeyboardEvent<HTMLInputElement>) => {
             const startIndex = (attempts - 1) * 5; // absolute start of current row
             let relativeIndex = absoluteIndex - startIndex; // 0-4 in currentGuess
 
@@ -97,6 +73,12 @@ function App() {
                     console.log("Not enough letters");
                     return;
                 }
+                const isValid = await validateWord(currentGuess);
+                if(!isValid){
+                    console.log("Not in wordlist");
+                    return;
+                } 
+
 
                 postGuess(
                     currentGuess,
@@ -113,24 +95,6 @@ function App() {
                 }
             }
         };
-
-    const resetFunc = async () => {
-        try {
-            console.log(guesses);
-            // Resets the server-side guesses and attempts
-            await resetGame();
-
-            setGuesses([]);
-
-            setAttempts(1);
-
-            setCurrentGuess(["", "", "", "", ""]);
-
-            console.log("Guesses reset");
-        } catch (error) {
-            console.error("Error resetting guesses:", error);
-        }
-    };
 
     return (
         <>

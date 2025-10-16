@@ -14,18 +14,21 @@ export const fetchWord = async (
     }
 };
 
-export const createWord = async (
-    setWord: React.Dispatch<React.SetStateAction<string>>
-) => {
+export const validateWord = async (currentGuess: string[]) => {
     try {
-        const reponse = await fetch("/api/createWord", {
+        const word = currentGuess.join("").toLowerCase();
+        const response = await fetch(`/api/validateWord?word=${word}`, {
+            method: "GET",
             credentials: "include",
         });
-        const data = await reponse.json();
-        setWord(data.word);
-        console.log("New word created:", data.word);
+
+        const data = await response.json();
+
+        console.log("Word validation response:", data);
+        return data.isValid;
     } catch (error) {
-        console.error("Error creating word:", error);
+        console.error("Error validating word:", error);
+        return false;
     }
 }
 

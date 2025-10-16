@@ -3,6 +3,35 @@ import session from "express-session";
 import cors from "cors";
 import cron from "node-cron";
 
+import pg from "pg";
+const {Client} = pg;
+
+const test = new Client({
+    user: "postgres",
+    host: "localhost",
+    database: "wordlyDB",
+    password: "eddiewn13",
+    port: 5432,
+});
+
+test.connect().then(() => {
+    console.log("Connected to PostgreSQL database");
+}).catch((err) => {
+    console.error("Connection error", err.stack);
+});
+
+test.query(`SELECT * FROM words_list LIMIT 1`,(err, res) => {
+    if (err) {
+        console.error("Error executing query", err.stack);
+    } else {
+        console.log("Query result:", res.rows);
+    }
+});
+
+// test.query(`SELECT * from words_list WHERE word = "truck"`, (err,res) => {
+//     console.log("Query response", res.rows )
+// })
+
 const app = express();
 
 declare module "express-session" {
@@ -79,10 +108,10 @@ const words = [
 //
 
 let currentDay = new Date().toDateString();
-const initialWord = "truck";
+const initialWord = "horbi";
 let randomWord = initialWord;
 
-cron.schedule("0 0 * * *", () => {
+cron.schedule("* * * * *", () => {
     console.log("Running daily reset task at midnight");
     randomWord = words[Math.floor(Math.random() * words.length)];
     currentDay = new Date().toDateString();
@@ -103,6 +132,18 @@ app.get("/api/guesses", (req, res) => {
         attempts: req.session.attempts,
         check2d: req.session.check2d,
     });
+});
+
+app.get("/api/validateWord", (req, res) => {
+    const currentGuess = req.query.word;
+    let isValid = false;
+
+    test.query((`SELECT EXISTS(SELECT 1 FROM words_list WHERE word = '${currentGuess}')`),(err, result) => {
+        if (result) {
+            isValid = result.rows[0].exists;
+        }
+        res.json({isValid})
+    })
 });
 
 app.post("/api/guesses", (req, res) => {
@@ -150,11 +191,5 @@ app.post("/api/guesses", (req, res) => {
     }
 });
 
-app.delete("/api/guesses", (req, res) => {
-    req.session.guesses = [];
-    req.session.attempts = 1;
-    req.session.check2d = [];
-    res.json({message: "Guesses and attempts reset"});
-});
 
 app.listen(4000, "0.0.0.0", () => console.log("Server running on port 4000"));
