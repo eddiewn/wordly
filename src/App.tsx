@@ -33,9 +33,9 @@ function App() {
         fetchWord(setWord);
     }, []);
 
-    useEffect(() => {
-        fetchGuesses(setGuesses, setAttempts, setCheck2d);
-    },[attempts])
+    // useEffect(() => {
+    //     fetchGuesses(setGuesses, setAttempts, setCheck2d);
+    // },[attempts])
 
     function endGame() {
         alert("You won!");
@@ -88,7 +88,6 @@ function App() {
                     setCheck2d
                 );
                 setCurrentGuess(["", "", "", "", ""]);
-                setAttempts((prev) => prev + 1);
                 if (currentGuess.join("").toLowerCase() == word) {
                     endGame();
                     return;

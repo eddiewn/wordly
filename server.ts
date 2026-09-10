@@ -166,13 +166,20 @@ app.post("/api/guesses", (req, res) => {
                     funcGuess[i] = "";
                 }
             }
+
+            
             return req.session.check2d?.push(check);
         };
 
         printWordDoubleCheck(randomWord, guess);
 
         req.session.attempts! += 1;
+
+console.log("BEFORE:", req.session.guesses);
+
         req.session.guesses?.push(guess);
+console.log("AFTER:", req.session.guesses);
+
         res.json({
             guesses: req.session.guesses,
             attempts: req.session.attempts,
