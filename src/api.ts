@@ -1,3 +1,6 @@
+const API_URL = "https://wordly-onc4.onrender.com"
+
+
 export const fetchWord = async (
     setWord: React.Dispatch<React.SetStateAction<string>>
 ) => {
@@ -17,7 +20,7 @@ export const fetchWord = async (
 export const validateWord = async (currentGuess: string[]) => {
     try {
         const word = currentGuess.join("").toLowerCase();
-        const response = await fetch(`/api/validateWord?word=${word}`, {
+        const response = await fetch(`${API_URL}/api/validateWord?word=${word}`, {
             method: "GET",
             credentials: "include",
         });
@@ -34,7 +37,7 @@ export const validateWord = async (currentGuess: string[]) => {
 
 export const resetGame = async () => {
     try {
-        await fetch("/api/guesses", {
+        await fetch(`${API_URL}/api/guesses`, {
             method: "DELETE",
             credentials: "include",
         });
@@ -50,7 +53,7 @@ export const fetchGuesses = async (
     setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>
 ) => {
     try {
-        const response = await fetch("/api/guesses", {
+        const response = await fetch(`${API_URL}/api/guesses`, {
             credentials: "include",
         });
         const data = await response.json();
@@ -70,7 +73,7 @@ export const postGuess = async (
     setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>,
 ) => {
     try {
-        const response = await fetch("/api/guesses", {
+        const response = await fetch(`${API_URL}/api/guesses`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
