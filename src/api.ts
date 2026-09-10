@@ -5,7 +5,7 @@ export const fetchWord = async (
     setWord: React.Dispatch<React.SetStateAction<string>>
 ) => {
     try {
-        const response = await fetch("/api/givemeWOOORD", {
+        const response = await fetch(`${API_URL}/api/givemeWOOORD`, {
             credentials: "include",
         });
         const data = await response.json();
