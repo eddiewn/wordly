@@ -42,7 +42,7 @@ app.use(express.json());
 
 app.use(
     session({
-        secret: "sigmaskibidi",
+        secret: process.env.SESSION_SECRET!
         resave: false,
         saveUninitialized: true,
     })
