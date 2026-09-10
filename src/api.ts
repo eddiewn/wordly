@@ -95,3 +95,17 @@ export const postGuess = async (
         console.error("Error posting guess:", error);
     }
 };
+
+export const checkServer = async () => {
+    try {
+        const response = await fetch(`${API_URL}/api/serverstatus`);
+
+        if (!response.ok) {
+            throw new Error("Server unavailable");
+        }
+
+        return true;
+    } catch {
+        return false;
+    }
+};

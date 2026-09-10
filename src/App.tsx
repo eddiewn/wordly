@@ -1,9 +1,10 @@
-import {useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import DisplayGrid from "./components/DisplayGrid";
-import {fetchWord} from "./api";
-import {postGuess} from "./api";
-import {fetchGuesses} from "./api";
-import {validateWord} from "./api";
+import { fetchWord } from "./api";
+import { postGuess } from "./api";
+import { fetchGuesses } from "./api";
+import { validateWord } from "./api";
+import { checkServer } from "./api";
 
 function App() {
     const [word, setWord] = useState<string>("");
@@ -25,7 +26,7 @@ function App() {
     function getAttemptRange(a: number) {
         const start = (a - 1) * 5 + 1;
         const end = a * 5;
-        return {start, end};
+        return { start, end };
     }
 
     useEffect(() => {
@@ -41,7 +42,7 @@ function App() {
         alert("You won!");
     }
 
-    const keyDownFunction = 
+    const keyDownFunction =
         (absoluteIndex: number) =>
         async (event: React.KeyboardEvent<HTMLInputElement>) => {
             const startIndex = (attempts - 1) * 5; // absolute start of current row
@@ -74,18 +75,17 @@ function App() {
                     return;
                 }
                 const isValid = await validateWord(currentGuess);
-                if(!isValid){
+                if (!isValid) {
                     console.log("Not in wordlist");
                     return;
-                } 
-
+                }
 
                 postGuess(
                     currentGuess,
                     setGuesses,
                     setAttempts,
                     setCurrentGuess,
-                    setCheck2d
+                    setCheck2d,
                 );
                 setCurrentGuess(["", "", "", "", ""]);
                 if (currentGuess.join("").toLowerCase() == word) {
@@ -94,6 +94,29 @@ function App() {
                 }
             }
         };
+
+    const [serverStarting, setServerStarting] = useState(true);
+
+    useEffect(() => {
+        const start = async () => {
+            const online = await checkServer();
+
+            if (online) {
+                setServerStarting(false);
+            } else {
+                const interval = setInterval(async () => {
+                    const online = await checkServer();
+
+                    if (online) {
+                        clearInterval(interval);
+                        setServerStarting(false);
+                    }
+                }, 3000);
+            }
+        };
+
+        start();
+    }, []);
 
     return (
         <>
@@ -124,6 +147,11 @@ function App() {
                     </div>
                 )}
             </div>
+            {serverStarting && (
+                <div>
+                    <p>Server is starting, please wait...</p>
+                </div>
+            )}
         </>
     );
 }

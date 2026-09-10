@@ -180,10 +180,8 @@ app.post("/api/guesses", (req, res) => {
 
         req.session.attempts! += 1;
 
-console.log("BEFORE:", req.session.guesses);
 
 req.session.guesses = [...(req.session.guesses || []), guess];
-console.log("AFTER:", req.session.guesses);
 
         res.json({
             guesses: req.session.guesses,
@@ -193,6 +191,10 @@ console.log("AFTER:", req.session.guesses);
     } catch (error) {
         console.error("Error deluxu style in post guesses", error);
     }
+});
+
+app.get("/api/serverstatus", (req, res) => {
+    res.json({ status: "ok" });
 });
 
 const PORT = process.env.PORT || 4000
