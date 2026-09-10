@@ -34,10 +34,6 @@ function App() {
         fetchWord(setWord);
     }, []);
 
-    // useEffect(() => {
-    //     fetchGuesses(setGuesses, setAttempts, setCheck2d);
-    // },[attempts])
-
     function endGame() {
         alert("You won!");
     }
@@ -146,12 +142,13 @@ function App() {
                         />
                     </div>
                 )}
-            </div>
-            {serverStarting && (
-                <div>
-                    <p>Server is starting, please wait...</p>
+            {serverStarting &&(
+                <div className="text-white z-50">
+                    <p>Server is starting, should take about 1 minute</p>
                 </div>
             )}
+            </div>
+
         </>
     );
 }
