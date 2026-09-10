@@ -181,7 +181,7 @@ app.post("/api/guesses", (req, res) => {
 
 console.log("BEFORE:", req.session.guesses);
 
-        req.session.guesses?.push(guess);
+req.session.guesses = [...(req.session.guesses || []), guess];
 console.log("AFTER:", req.session.guesses);
 
         res.json({

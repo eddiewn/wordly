@@ -1,8 +1,7 @@
-const API_URL = "https://wordly-onc4.onrender.com"
-
+const API_URL = "https://wordly-onc4.onrender.com";
 
 export const fetchWord = async (
-    setWord: React.Dispatch<React.SetStateAction<string>>
+    setWord: React.Dispatch<React.SetStateAction<string>>,
 ) => {
     try {
         const response = await fetch(`${API_URL}/api/givemeWOOORD`, {
@@ -10,8 +9,7 @@ export const fetchWord = async (
         });
         const data = await response.json();
         setWord(data.word);
-        console.log(data.word)
-
+        console.log(data.word);
     } catch (error) {
         console.error("Error fetching word:", error);
     }
@@ -20,10 +18,13 @@ export const fetchWord = async (
 export const validateWord = async (currentGuess: string[]) => {
     try {
         const word = currentGuess.join("").toLowerCase();
-        const response = await fetch(`${API_URL}/api/validateWord?word=${word}`, {
-            method: "GET",
-            credentials: "include",
-        });
+        const response = await fetch(
+            `${API_URL}/api/validateWord?word=${word}`,
+            {
+                method: "GET",
+                credentials: "include",
+            },
+        );
 
         const data = await response.json();
 
@@ -33,7 +34,7 @@ export const validateWord = async (currentGuess: string[]) => {
         console.error("Error validating word:", error);
         return false;
     }
-}
+};
 
 export const resetGame = async () => {
     try {
@@ -45,12 +46,12 @@ export const resetGame = async () => {
     } catch (error) {
         console.error("Error resetting game:", error);
     }
-}
+};
 
 export const fetchGuesses = async (
     setGuesses: React.Dispatch<React.SetStateAction<string[]>>,
     setAttempts: React.Dispatch<React.SetStateAction<number>>,
-    setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>
+    setCheck2d: React.Dispatch<React.SetStateAction<number[][]>>,
 ) => {
     try {
         const response = await fetch(`${API_URL}/api/guesses`, {
@@ -84,9 +85,8 @@ export const postGuess = async (
             credentials: "include",
         });
 
-
         const data = await response.json();
-        console.log(`This is data: ${data.guesses}`)
+        console.log("this is data:", data);
         setGuesses(data.guesses);
         setAttempts(data.attempts);
         setCurrentGuess(["", "", "", "", ""]);
