@@ -29,6 +29,7 @@ db.query(`SELECT word FROM words_list LIMIT 1`,(err, res) => {
 });
 
 const app = express();
+app.set("trust proxy", 1);
 
 declare module "express-session" {
     interface SessionData {
