@@ -13,6 +13,7 @@
     "dependencies": {
         "@tailwindcss/vite": "^4.1.13",
         "cors": "^2.8.5",
+        "dotenv": "^17.4.2",
         "express": "^5.1.0",
         "express-session": "^1.18.2",
         "node-cron": "^4.2.1",

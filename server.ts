@@ -3,28 +3,28 @@ import session from "express-session";
 import cors from "cors";
 import cron from "node-cron";
 
+import dotenv from "dotenv"
+dotenv.config();
+
+
 import pg from "pg";
-const {Client} = pg;
 
-const test = new Client({
-    user: "postgres",
-    host: "localhost",
-    database: "wordlyDB",
-    password: "eddiewn13",
-    port: 5432,
+const { Pool } = pg;
+
+const db = new Pool({
+    connectionString: process.env.DATABASE_URL,
 });
-
-test.connect().then(() => {
+db.connect().then(() => {
     console.log("Connected to PostgreSQL database");
 }).catch((err) => {
     console.error("Connection error", err.stack);
 });
 
-test.query(`SELECT * FROM words_list LIMIT 1`,(err, res) => {
+db.query(`SELECT word FROM words_list LIMIT 1`,(err, res) => {
     if (err) {
         console.error("Error executing query", err.stack);
     } else {
-        console.log("Query result:", res.rows);
+        console.log("Query result:", res.rows[0]);
     }
 });
 
@@ -75,51 +75,37 @@ app.use((req, res, next) => {
     next();
 });
 
-// My makeshift database
-const words = [
-    "apple",
-    "grape",
-    "peach",
-    "mango",
-    "lemon",
-    "berry",
-    "melon",
-    "plums",
-    "chest",
-    "linus",
-    "olive",
-    "apric",
-    "cider",
-    "guava",
-    "figgy",
-    "prune",
-    "hazel",
-    "honey",
-    "sugar",
-    "spice",
-];
-
-//
-//////////////////////////////////////////////
-//
 
 let currentDay = new Date().toDateString();
-const initialWord = "horbi";
+const initialWord = "snake";
 let randomWord = initialWord;
 
 // * * * * * for testing, runs every minute
-cron.schedule("0 0 * * *", () => {
-    console.log("Running daily reset task at midnight");
-    randomWord = words[Math.floor(Math.random() * words.length)];
+
+async function getRandomWord() {
+    const result = await db.query(
+        "SELECT word FROM words_list ORDER BY random() LIMIT 1"
+    );
+
+    return result.rows[0].word;
+}
+
+(async () => {
+    setRandomWord()
+})();
+
+async function setRandomWord() {
+    randomWord = await getRandomWord();
+    console.log("New word:", randomWord);
+}
+cron.schedule("0 0 * * *", async() => {
+
+    await setRandomWord()
     currentDay = new Date().toDateString();
 });
 
-app.get("/api/givemeWOOORD", (req, res) => {
-    res.json({word: randomWord});
-});
 
-app.get("/api/createWord", (req, res) => {
-    randomWord = words[Math.floor(Math.random() * words.length)];
+app.get("/api/givemeWOOORD", (req, res) => {
     res.json({word: randomWord});
 });
 
@@ -131,16 +117,25 @@ app.get("/api/guesses", (req, res) => {
     });
 });
 
-app.get("/api/validateWord", (req, res) => {
-    const currentGuess = req.query.word;
-    let isValid = false;
+app.get("/api/validateWord", async(req, res) => {
+    const currentGuess = String(req.query.word).trim().toLowerCase();
 
-    test.query((`SELECT EXISTS(SELECT 1 FROM words_list WHERE word = '${currentGuess}')`),(err, result) => {
-        if (result) {
-            isValid = result.rows[0].exists;
-        }
-        res.json({isValid})
-    })
+    try {
+        const result = await db.query(
+            "SELECT EXISTS(SELECT 1 FROM words_list WHERE word = $1)",
+            [currentGuess]
+        );
+
+        console.log("Checking:", JSON.stringify(currentGuess));
+        console.log("Result:", result.rows[0].exists);
+
+        res.json({
+            isValid: result.rows[0].exists
+        });
+    } catch (error) {
+        console.error("Error validating word:", error);
+        res.status(500).json({ isValid: false });
+    }
 });
 
 app.post("/api/guesses", (req, res) => {
